@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "289478310336",
+    "firebase_url": "https://riderapp-9c389.firebaseio.com",
+    "project_id": "riderapp-9c389",
+    "storage_bucket": "riderapp-9c389.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289478310336:android:a627781efffdfaa6",
+        "android_client_info": {
+          "package_name": "com.example.xhaxs.rider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289478310336-vlnuqc7pkqj8vlre6i3qp9d0mne6r81j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.xhaxs.rider",
+            "certificate_hash": "95521be3e80f68ef71018e88a787aded7d5e560d"
+          }
+        },
+        {
+          "client_id": "289478310336-kejchf5g9l3p4i0o25j7d0a5jqd56bfm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxfQWuOsG1p4ozLVP_LBdUhjS15jmjVro"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289478310336-kejchf5g9l3p4i0o25j7d0a5jqd56bfm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
