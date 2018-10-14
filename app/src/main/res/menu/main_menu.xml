@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+=======
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+>>>>>>> 3b7822bee049854512d4c6b91112585f507341a9
 
     <item
         android:id="@+id/menu_logout_btn"

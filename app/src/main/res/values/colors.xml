@@ -2,7 +2,10 @@
 <resources>
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#0069c0</color>
+<<<<<<< HEAD
     <color name="colorPrimaryLight">#4dabf5</color>
+=======
+>>>>>>> 3b7822bee049854512d4c6b91112585f507341a9
     <color name="colorAccent">#F44336</color>
     <color name="white">#ffffff</color>
     <color name="facebook">#5240AF</color>

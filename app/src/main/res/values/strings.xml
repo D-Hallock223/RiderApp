@@ -2,7 +2,10 @@
     <string name="app_name">HillShare</string>
     <string name="facebook_app_id">175061560038359</string>
     <string name="fb_login_protocol_scheme">fb175061560038359</string>
+<<<<<<< HEAD
     <string name="geo_autocomplete_api_key">AIzaSyBrvm6IE7gTnfhC7OC_SRJ9HC0ixZsHuhg</string>
     <string name="from_location">Enter From Location</string>
     <string name="to_location">To?</string>
+=======
+>>>>>>> 3b7822bee049854512d4c6b91112585f507341a9
 </resources>
