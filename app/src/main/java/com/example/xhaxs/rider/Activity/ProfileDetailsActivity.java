@@ -77,28 +77,6 @@ public class ProfileDetailsActivity extends AppCompatActivity {
             }
         });
 
-//        mCountryCode.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                String value = s.toString();
-//                if(TextUtils.isEmpty(value) == false && value.length() == 2){
-//                    countryCodeFinal = value;
-//                } else {
-//                    countryCodeFinal = "91";
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-
         mPhoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

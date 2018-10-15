@@ -15,6 +15,7 @@ public class RideSummaryActivity extends AppCompatActivity {
 
     private CreateRideDetailData mCreateRideDetailData;
     private CircleImageView mImageViewOwnerImage;
+    private TextView mTextViewOwner;
     private TextView mTextViewToLoc;
     private TextView mTextViewFromLoc;
     private TextView mTextViewMaxRiders;
@@ -28,10 +29,12 @@ public class RideSummaryActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Log.d(this.getClass().getName(), "----------------------------------------------------------------------------------");
+
         Intent intent = getIntent();
 
         if (intent.hasExtra("RideDetail")) {
-            mCreateRideDetailData = (CreateRideDetailData) intent.getSerializableExtra("RideDetail");
+            mCreateRideDetailData = (CreateRideDetailData) intent.getParcelableExtra("RideDetail");
             Log.d(this.getClass().getName(), mCreateRideDetailData.toString());
         } else {
             finish();
@@ -42,11 +45,13 @@ public class RideSummaryActivity extends AppCompatActivity {
         mTextViewFromLoc = findViewById(R.id.tv_rsu_from_loc);
         mTextViewMaxRiders = findViewById(R.id.tv_rsu_max_coord);
         mTextViewCurRiders = findViewById(R.id.tv_rsu_cur_coord);
+        mTextViewOwner = findViewById(R.id.tv_rsu_owner_name);
 
         mTextViewToLoc.setText(mCreateRideDetailData.getToLoc().toString());
         mTextViewFromLoc.setText(mCreateRideDetailData.getFromLoc().toString());
         mTextViewMaxRiders.setText(Integer.toString(mCreateRideDetailData.getMaxAccomodation()));
         mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
+        mTextViewOwner.setText(mCreateRideDetailData.getRideUsers().get(0).getUname());
 
         /* TODO
          * 1. Add the owner Image

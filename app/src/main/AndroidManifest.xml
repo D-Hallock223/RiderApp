@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD7dvJkB1FA3sOQ_wwrKL15V0FMhOKmSJU"/>
+
         <activity android:name=".Activity.MainActivity">
 
             <!-- <intent-filter> -->
@@ -57,6 +61,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xhaxs.rider.Activity.SearchRideActivity" />
 
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
         </activity>
         <activity
             android:name=".Activity.CreateRideOtherDetails"
@@ -70,11 +80,11 @@
         <activity
             android:name=".Activity.SearchRideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activity.RideSummaryActivity"
@@ -89,11 +99,11 @@
         <activity
             android:name=".Activity.ProfileDetailsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
     </application>

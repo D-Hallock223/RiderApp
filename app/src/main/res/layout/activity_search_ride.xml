@@ -18,76 +18,7 @@
         android:paddingBottom="16dp"
         android:translationZ="8dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/et_sr_from_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@drawable/edittext_auto_complete"
-                    android:backgroundTint="@color/colorPrimaryLight"
-                    android:hint="@string/from_location"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingVertical="8dp"
-                    android:paddingLeft="8dp" />
-
-                <ImageButton
-                    android:id="@+id/ib_sr_from_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@color/colorPrimaryLight"
-                    android:paddingHorizontal="8dp"
-                    android:src="@drawable/baseline_keyboard_arrow_down_24" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/et_sr_to_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@drawable/edittext_auto_complete"
-                    android:backgroundTint="@color/colorPrimaryLight"
-                    android:hint="@string/to_location"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingVertical="8dp"
-                    android:paddingLeft="8dp" />
-
-                <ImageButton
-                    android:id="@+id/ib_sr_to_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:background="@color/colorPrimaryLight"
-                    android:paddingHorizontal="8dp"
-                    android:src="@drawable/baseline_keyboard_arrow_down_24" />
-
-            </LinearLayout>
-        </LinearLayout>
+        <include layout="@layout/search_autocomplete_frag"/>
 
         <RelativeLayout
             android:layout_width="64dp"
@@ -112,13 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/search_bar_sr"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_sr_autocomplete"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/search_bar_sr" />
+        android:visibility="visible" />
 
     <ImageButton
         android:id="@+id/fab_create_new_ride_sr"

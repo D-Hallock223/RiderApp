@@ -4,31 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
     tools:context=".Activity.MainActivity">
-=======
-    tools:context=".MainActivity">
->>>>>>> 3b7822bee049854512d4c6b91112585f507341a9
 
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/maintoolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
-=======
-        app:titleTextColor="@color/white"
->>>>>>> 3b7822bee049854512d4c6b91112585f507341a9
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-<<<<<<< HEAD
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/white" />
-=======
-        app:layout_constraintTop_toTopOf="parent" />
->>>>>>> 3b7822bee049854512d4c6b91112585f507341a9
 
 </android.support.constraint.ConstraintLayout>

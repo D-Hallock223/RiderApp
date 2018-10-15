@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -19,6 +20,12 @@ import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.Datatype.PlaceData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.R;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Calendar;
@@ -49,34 +56,66 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
     private PlaceData toPlaceData;
     private Calendar calendarFinal;
     private CreateRideDetailData mCreateRideDetailData;
+    private GeoDataClient mGeoDataClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_ride_other_details);
 
-//        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if(firebaseUser == null){
-//            Intent intent = new Intent(this, LoginActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        fromPlaceData = (PlaceData) intent.getSerializableExtra("fromLocationDetails");
-        toPlaceData = (PlaceData) intent.getSerializableExtra("toLocationDetails");
 
         mFromLocatioFinalMain = findViewById(R.id.tv_from_location_final);
         mToLocationFinalMain = findViewById(R.id.tv_to_location_final);
         mFromLocationSecondary = findViewById(R.id.tv_from_extra_info_cro);
         mToLocationSecondary = findViewById(R.id.tv_to_extra_info_cro);
 
-        mFromLocatioFinalMain.setText(fromPlaceData.getPlaceNameMain());
-        mFromLocationSecondary.setText(fromPlaceData.getPlaceNameSecondary());
+        mGeoDataClient = Places.getGeoDataClient(this);
+        String fLoc = intent.getStringExtra("fromLocationDetails");
+        String tLoc = intent.getStringExtra("toLocationDetails");
 
-        mToLocationFinalMain.setText(toPlaceData.getPlaceNameMain());
-        mToLocationSecondary.setText(toPlaceData.getPlaceNameSecondary());
+        Log.d(this.getClass().getName(), "+++++++++++++++++++GOT FROM -- " + fLoc + " <><><> " + tLoc + " -- TO ID++++++++++++++++++++++++++++");
+
+        mGeoDataClient.getPlaceById(fLoc).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                if(task.isSuccessful()){
+                    Log.d(this.getClass().getName(), "-**************************** --------> Getting From Loc <------- ********************-");
+                    PlaceBufferResponse places = task.getResult();
+                    Place p = places.get(0);
+                    fromPlaceData = new PlaceData(p.getName().toString(), p.getAddress().toString(), p.getId(), p.getLatLng());
+                    Log.d(this.getClass().getName(), "-****************************GOT From Loc -> " + fromPlaceData.getName() + "********************-");
+                    mFromLocatioFinalMain.setText(fromPlaceData.getName());
+                    mFromLocationSecondary.setText(fromPlaceData.getAddress());
+                    places.release();
+                }
+            }
+        });
+
+        mGeoDataClient.getPlaceById(tLoc).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+                if(task.isSuccessful()){
+                    Log.d(this.getClass().getName(), "-**************************** --------> Getting To Loc <------- ********************-");
+                    PlaceBufferResponse places = task.getResult();
+                    Place p = places.get(0);
+                    toPlaceData = new PlaceData(p.getName().toString(), p.getAddress().toString(), p.getId(), p.getLatLng());
+                    Log.d(this.getClass().getName(), "-****************************GOT From Loc -> " + toPlaceData.getName() + "********************-");
+                    mToLocationFinalMain.setText(toPlaceData.getName());
+                    mToLocationSecondary.setText(toPlaceData.getAddress());
+                    places.release();
+                }
+            }
+        });
+
+
+//        mFromLocatioFinalMain.setText(fromPlaceData.getPlaceNameMain());
+//        mFromLocationSecondary.setText(fromPlaceData.getPlaceNameSecondary());
+
+//        mToLocationFinalMain.setText(toPlaceData.getPlaceNameMain());
+//        mToLocationSecondary.setText(toPlaceData.getPlaceNameSecondary());
 
         mpick = findViewById(R.id.b_pick_cr);
         mDisplay = findViewById(R.id.tv_date_time_cr);
@@ -136,7 +175,6 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
                  * 2. Store the data in Firebase
                  *
                  */
-
                 mCreateRideDetailData = new CreateRideDetailData(
                         new UserSumData("1", "Name", "name@gmail.com"),
                         fromPlaceData,
