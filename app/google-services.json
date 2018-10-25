@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "289478310336-jiu6oavrsluu8he1440iinhbr7t0p5jn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.xhaxs.rider",
+            "certificate_hash": "0f52330dd260566eab7d5596ed0957dd5d0cb060"
+          }
+        },
+        {
           "client_id": "289478310336-kejchf5g9l3p4i0o25j7d0a5jqd56bfm.apps.googleusercontent.com",
           "client_type": 3
         }

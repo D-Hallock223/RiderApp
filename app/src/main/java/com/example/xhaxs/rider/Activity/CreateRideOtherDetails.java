@@ -27,9 +27,13 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 //import java.text.DateFormat;
 
@@ -56,6 +60,7 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
     private PlaceData toPlaceData;
     private Calendar calendarFinal;
     private CreateRideDetailData mCreateRideDetailData;
+    private DatabaseReference mDatabase;
     private GeoDataClient mGeoDataClient;
 
     @Override
@@ -73,8 +78,8 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
         mToLocationSecondary = findViewById(R.id.tv_to_extra_info_cro);
 
         mGeoDataClient = Places.getGeoDataClient(this);
-        String fLoc = intent.getStringExtra("fromLocationDetails");
-        String tLoc = intent.getStringExtra("toLocationDetails");
+        final String fLoc = intent.getStringExtra("fromLocationDetails");
+        final String tLoc = intent.getStringExtra("toLocationDetails");
 
         Log.d(this.getClass().getName(), "+++++++++++++++++++GOT FROM -- " + fLoc + " <><><> " + tLoc + " -- TO ID++++++++++++++++++++++++++++");
 
@@ -175,6 +180,22 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
                  * 2. Store the data in Firebase
                  *
                  */
+
+                // ...
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                String key = mDatabase.child("Riders").push().getKey();
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("from", fromPlaceData.getName());
+                result.put("to", toPlaceData.getName());
+                result.put("date", mDisplay.getText().toString());
+                result.put("maxrides", mMaxCountDisplay.getText().toString());
+                //          mDatabase.child("Riders").setValue(result);
+                //   mDatabase.child("Riders").push(result);
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("/Riders/" + key, result);
+                mDatabase.updateChildren(childUpdates);
+
+
                 mCreateRideDetailData = new CreateRideDetailData(
                         new UserSumData("1", "Name", "name@gmail.com"),
                         fromPlaceData,

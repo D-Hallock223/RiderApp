@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import java.io.Serializable;
+import java.util.HashMap;
 
 public class UserSumData implements Parcelable {
     private String uid;
@@ -78,5 +78,13 @@ public class UserSumData implements Parcelable {
                 "UID # " + uid + "\n" +
                 "Email # " + email + "\n" +
                 "Name # " + uname + ">";
+    }
+
+    public HashMap<String, Object> toMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("uid", this.uid);
+        map.put("name", this.uname);
+        map.put("email", this.email);
+        return map;
     }
 }

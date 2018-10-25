@@ -137,9 +137,16 @@ public class SearchRideActivity extends AppCompatActivity {
         return "temporary URL -> " + fromLocationFinal.toString() + " - " + toLocationFinal.toString();
     }
 
+    public Place getFromValue() {
+        return fromLocationFinal;
+    }
+
+    public Place getTovalue() {
+        return toLocationFinal;
+    }
+
 
     boolean checkAvailData(){
-        if(fromLocationFinal == null || toLocationFinal == null) return false;
-        return true;
+        return fromLocationFinal != null && toLocationFinal != null;
     }
 }
