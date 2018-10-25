@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -23,7 +24,6 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
     private SearchRideActivity mSearchRideActivity;
     private CreateRideDetailData[] mCreateRideDetailData;
     private Map<String, Object> mapFrom;
-    private Map<String, Object> mapTo;
 
     private GeoDataClient mGeoDataClient;
 
@@ -79,35 +79,60 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
 //                }
 //            }
 //        });
+
         final DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("Riders")
-                .orderByChild("from").equalTo(mSearchRideActivity.getFromValue().getName().toString())
-//                .orderByChild("to").equalTo(mSearchRideActivity.getTovalue().getName().toString())
+                .orderByChild("from_loc/id").equalTo(mSearchRideActivity.getFromValue().getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        mapFrom = null;
-                        mapTo = null;
-                        mapFrom = (Map<String, Object>) dataSnapshot.getValue();
+                        Map<String, Object> mapFrom = (Map<String, Object>) dataSnapshot.getValue();
                         Log.d(this.getClass().getName(), "___________________________________________");
-                        Log.d(this.getClass().getName(), "_----------------------Searching for " + mSearchRideActivity.getFromValue().getName().toString());
+                        Log.d(this.getClass().getName(), "_----------------------Searching for " + mSearchRideActivity.getFromValue().getId());
+
+                        if(mapFrom == null){
+                            Log.d(this.getClass().getName(), "______________NOTHING FOUND_____________");
+                            mSearchRideActivity.swapPosData(new CreateRideDetailData[0]);
+                            return;
+                        }
+
                         Log.d(this.getClass().getName(), mapFrom.toString());
                         Log.d(this.getClass().getName(), "___________________________________________");
 
+                        ArrayList<CreateRideDetailData> createRideDetailDataArrayList = new ArrayList<>();
+
                         for (Map.Entry<String, Object> entry : mapFrom.entrySet()) {
                             Map<String, Object> ride = (Map<String, Object>) entry.getValue();
-                            Log.d("---", ride.get("to").toString() + "  <---> " + mSearchRideActivity.getTovalue().getName());
-                            if (ride.get("to").toString().contentEquals(mSearchRideActivity.getTovalue().getName())) {
-                                //Log.d(this.getClass().getName(), "Matched Entry :: -- " + entry.getKey() + " --- ");
+                            Log.d("------------", "Printing ride value -- \n" +
+                                    ride.toString()
+                                );
+                            if (((Map<String, Object>)ride.get("to_loc"))
+                                    .get("id")
+                                    .toString()
+                                    .contentEquals(mSearchRideActivity.getTovalue().getId())
+                                    ) {
 
                                 //TODO
                                 //1. convert the received data into Create Ride Detail Data Object
                                 //2. swap the adapter with the received data
-
+                                Log.d(this.getClass().getName(), "************** CALLING MAP FROM RIDE DETAIL TASK *************************");
+                                createRideDetailDataArrayList.add(new CreateRideDetailData(entry.getKey(), (Map<String, Object>)entry.getValue()));
                             }
                         }
+
+                        mCreateRideDetailData = new CreateRideDetailData[createRideDetailDataArrayList.size()];
+                        for(int i = 0; i < createRideDetailDataArrayList.size(); ++i){
+                            mCreateRideDetailData[i] = createRideDetailDataArrayList.get(i);
+                        }
+
+                        if(createRideDetailDataArrayList != null && createRideDetailDataArrayList.size() > 0) {
+                            mSearchRideActivity.swapPosData(mCreateRideDetailData);
+                        } else {
+                            mSearchRideActivity.swapPosData(new CreateRideDetailData[0]);
+                        }
+
                     }
 
                     @Override

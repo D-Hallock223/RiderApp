@@ -182,19 +182,6 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
                  */
 
                 // ...
-                mDatabase = FirebaseDatabase.getInstance().getReference();
-                String key = mDatabase.child("Riders").push().getKey();
-                HashMap<String, Object> result = new HashMap<>();
-                result.put("from", fromPlaceData.getName());
-                result.put("to", toPlaceData.getName());
-                result.put("date", mDisplay.getText().toString());
-                result.put("maxrides", mMaxCountDisplay.getText().toString());
-                //          mDatabase.child("Riders").setValue(result);
-                //   mDatabase.child("Riders").push(result);
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/Riders/" + key, result);
-                mDatabase.updateChildren(childUpdates);
-
 
                 mCreateRideDetailData = new CreateRideDetailData(
                         new UserSumData("1", "Name", "name@gmail.com"),
@@ -203,6 +190,22 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
                         calendarFinal,
                         cMaxCount
                 );
+
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                String key = mDatabase.child("Riders").push().getKey();
+                HashMap<String, Object> result = mCreateRideDetailData.toMap();
+//                result.put("from", fromPlaceData.getName());
+//                result.put("to", toPlaceData.getName());
+//                result.put("date", mDisplay.getText().toString());
+//                result.put("maxrides", mMaxCountDisplay.getText().toString());
+                //          mDatabase.child("Riders").setValue(result);
+                //   mDatabase.child("Riders").push(result);
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("/Riders/" + key, result);
+                mDatabase.updateChildren(childUpdates);
+
+
+
 
                 Toast.makeText(CreateRideOtherDetails.this, "Rider Created with details # " + mCreateRideDetailData.toString(), Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(CreateRideOtherDetails.this, SearchRideActivity.class);

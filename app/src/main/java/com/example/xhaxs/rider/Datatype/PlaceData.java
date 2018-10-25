@@ -3,12 +3,21 @@ package com.example.xhaxs.rider.Datatype;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlaceData implements Parcelable {
+
+    public static final String NAME_STRING = "name";
+    public static final String ADDRESS_STRING = "address";
+    public static final String ID_STRING = "id";
+    public static final String LAT_STRING = "latitude";
+    public static final String LNG_STRING = "longitude";
 
     private String mName;
     private String mAddress;
@@ -90,5 +99,32 @@ public class PlaceData implements Parcelable {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public HashMap<String, Object> toMap() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(ID_STRING, this.mID);
+        map.put(NAME_STRING, this.mName);
+        map.put(ADDRESS_STRING, this.mAddress);
+        map.put(LAT_STRING, this.mLatLng.latitude);
+        map.put(LNG_STRING, this.mLatLng.longitude);
+        return map;
+    }
+
+    public PlaceData(Map<String, Object> map){
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- ID -- PLACE DATA");
+        this.mID = map.get(ID_STRING).toString();
+
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- NAME -- PLACE DATA");
+        this.mName = map.get(NAME_STRING).toString();
+
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- ADDRESS -- PLACE DATA");
+        this.mAddress = map.get(ADDRESS_STRING).toString();
+
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- LAT LNG-- PLACE DATA");
+        this.mLatLng = new LatLng(
+                (double)Double.parseDouble(map.get(LAT_STRING).toString()),
+                (double)Double.parseDouble(map.get(LNG_STRING).toString())
+        );
     }
 }

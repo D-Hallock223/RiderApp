@@ -3,10 +3,17 @@ package com.example.xhaxs.rider.Datatype;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class UserSumData implements Parcelable {
+
+    private static final String UID_STRING = "uid";
+    private static final String UNAME_STRING = "uname";
+    private static final String EMAIL_STRING = "email";
+
     private String uid;
     private String uname;
     private String email;
@@ -82,9 +89,21 @@ public class UserSumData implements Parcelable {
 
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("uid", this.uid);
-        map.put("name", this.uname);
-        map.put("email", this.email);
+        map.put(UID_STRING, this.uid);
+        map.put(UNAME_STRING, this.uname);
+        map.put(EMAIL_STRING, this.email);
         return map;
+    }
+
+    public UserSumData(Map<String, Object> map){
+
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- ID -- USER SUM DATA");
+        this.uid = map.get(UID_STRING).toString();
+
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- UNAME -- USER SUM DATA");
+        this.uname = map.get(UNAME_STRING).toString();
+
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- EMAIL -- USER SUM DATA");
+        this.email = map.get(EMAIL_STRING).toString();
     }
 }
