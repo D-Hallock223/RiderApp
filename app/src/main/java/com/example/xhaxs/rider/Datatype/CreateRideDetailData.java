@@ -151,9 +151,26 @@ public class CreateRideDetailData implements Parcelable {
                 + "> ";
     }
 
-    public void addUser(UserSumData cUserData) {
-        if(rideUsers.size() == maxAccomodation) return;
+    public boolean addUser(UserSumData cUserData) {
+        if(cUserData.getUid() == rideOwner.getUid()) return false;
+        if(rideUsers.size() == maxAccomodation) return false;
+        for(int i = 0; i < rideUsers.size(); ++i){
+            if(cUserData.getUid() == rideUsers.get(i).getUid()) return false;
+        }
         rideUsers.add(cUserData);
+        return true;
+    }
+
+    public boolean removeUser(UserSumData cUserData){
+        if(cUserData.getUid() == rideOwner.getUid()) return false;
+        if(rideUsers.size() == 1) return false;
+        for(int i = 0; i < rideUsers.size(); ++i){
+            if(cUserData.getUid() == rideUsers.get(i).getUid()){
+                rideUsers.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public HashMap<String, Object> toMap() {

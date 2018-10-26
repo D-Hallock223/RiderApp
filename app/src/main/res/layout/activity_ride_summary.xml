@@ -17,6 +17,10 @@
         android:orientation="vertical"
         android:translationZ="8dp">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/ll_rs_owner_det"
             android:layout_width="match_parent"
@@ -47,7 +51,8 @@
             android:orientation="vertical"
             android:paddingHorizontal="8dp"
             android:paddingTop="16dp"
-            android:paddingBottom="8dp">
+            android:paddingBottom="8dp"
+            android:layout_below="@+id/ll_rs_owner_det">
 
             <TextView
                 android:id="@+id/tv_rsu_from_loc"
@@ -114,6 +119,35 @@
                 android:layout_marginHorizontal="24dp" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Join"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:id="@+id/bt_rsu_join_ride"
+                android:layout_marginHorizontal="4dp"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Leave"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:id="@+id/bt_rsu_leave_ride"
+                android:layout_marginHorizontal="4dp"/>
+
+        </LinearLayout>
+
+        </RelativeLayout>
 
     </LinearLayout>
 

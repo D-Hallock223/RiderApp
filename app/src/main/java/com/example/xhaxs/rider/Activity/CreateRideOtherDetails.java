@@ -20,12 +20,14 @@ import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.Datatype.PlaceData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.R;
+import com.facebook.login.Login;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -63,6 +65,8 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
     private DatabaseReference mDatabase;
     private GeoDataClient mGeoDataClient;
 
+    private FirebaseUser mCurrentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,12 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(mCurrentUser  == null){
+            Intent nintent = new Intent(CreateRideOtherDetails.this, LoginActivity.class);
+            startActivity(nintent);
+            finish();
+        }
         Intent intent = getIntent();
 
         mFromLocatioFinalMain = findViewById(R.id.tv_from_location_final);
@@ -184,7 +194,7 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
                 // ...
 
                 mCreateRideDetailData = new CreateRideDetailData(
-                        new UserSumData("1", "Name", "name@gmail.com"),
+                        new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()),
                         fromPlaceData,
                         toPlaceData,
                         calendarFinal,
@@ -194,18 +204,10 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 String key = mDatabase.child("Riders").push().getKey();
                 HashMap<String, Object> result = mCreateRideDetailData.toMap();
-//                result.put("from", fromPlaceData.getName());
-//                result.put("to", toPlaceData.getName());
-//                result.put("date", mDisplay.getText().toString());
-//                result.put("maxrides", mMaxCountDisplay.getText().toString());
-                //          mDatabase.child("Riders").setValue(result);
-                //   mDatabase.child("Riders").push(result);
+
                 Map<String, Object> childUpdates = new HashMap<>();
                 childUpdates.put("/Riders/" + key, result);
                 mDatabase.updateChildren(childUpdates);
-
-
-
 
                 Toast.makeText(CreateRideOtherDetails.this, "Rider Created with details # " + mCreateRideDetailData.toString(), Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(CreateRideOtherDetails.this, SearchRideActivity.class);

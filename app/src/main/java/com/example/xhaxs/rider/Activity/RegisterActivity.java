@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -68,10 +69,10 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
 
-
                                 if (task.isSuccessful()) {
                                     Toast.makeText(RegisterActivity.this, "Account Created", Toast.LENGTH_SHORT).show();
-                                    Intent sendtomain = new Intent(RegisterActivity.this, SearchRideActivity.class);
+                                    Intent sendtomain = new Intent(RegisterActivity.this, ProfileDetailsActivity.class);
+
                                     startActivity(sendtomain);
                                     finish();
                                 } else {
@@ -101,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseUser currenruser = mAuth.getCurrentUser();
         if (currenruser != null) {
             // user is logged in and no need to register/login
-            Intent sendtomain = new Intent(RegisterActivity.this, SearchRideActivity.class);
+            Intent sendtomain = new Intent(RegisterActivity.this, ProfileDetailsActivity.class);
             startActivity(sendtomain);
             finish();
         }
