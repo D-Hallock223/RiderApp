@@ -165,8 +165,10 @@ public class RideSummaryActivity extends AppCompatActivity {
                 Toast.makeText(RideSummaryActivity.this, fmessage, Toast.LENGTH_SHORT).show();
 
                 toggleVisibilty(type);
+                finish();
             }
         });
+
     }
 
     @Override
