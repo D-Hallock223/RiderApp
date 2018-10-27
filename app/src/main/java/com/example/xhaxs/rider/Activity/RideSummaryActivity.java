@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import com.example.xhaxs.rider.Adapter.RideUserJoinSummaryAdapter;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
+import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.facebook.login.Login;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +34,9 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RideSummaryActivity extends AppCompatActivity {
+
+    private static final int JOINED_CONST = 1;
+    private static final int LEFT_CONST = 2;
 
     private CreateRideDetailData mCreateRideDetailData;
     private CircleImageView mImageViewOwnerImage;
@@ -57,16 +63,12 @@ public class RideSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_summary);
 
+        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(mCurrentUser == null){
-            Intent intent = new Intent(RideSummaryActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Log.d(this.getClass().getName(), "----------------------------------------------------------------------------------");
 
         Intent intent = getIntent();
 
@@ -85,6 +87,17 @@ public class RideSummaryActivity extends AppCompatActivity {
         mTextViewOwner = findViewById(R.id.tv_rsu_owner_name);
         mJoinButton = findViewById(R.id.bt_rsu_join_ride);
         mLeaveButton = findViewById(R.id.bt_rsu_leave_ride);
+
+        if(mCreateRideDetailData.isOwner(mCurrentUser.getUid())){
+            mJoinButton.setVisibility(View.GONE);
+            mLeaveButton.setVisibility(View.GONE);
+        } else {
+            if(mCreateRideDetailData.isMember(mCurrentUser.getUid())){
+                toggleVisibilty(JOINED_CONST);
+            } else {
+                toggleVisibilty(LEFT_CONST);
+            }
+        }
 
         mTextViewToLoc.setText(mCreateRideDetailData.getToLoc().toString());
         mTextViewFromLoc.setText(mCreateRideDetailData.getFromLoc().toString());
@@ -117,7 +130,7 @@ public class RideSummaryActivity extends AppCompatActivity {
                         new UserSumData(mCurrentUser.getUid(),mCurrentUser.getDisplayName(), mCurrentUser.getEmail())
                 );
                 if(updateBool == true) {
-                    updateDataBase("You joined the ride");
+                    updateDataBase("You joined the ride", JOINED_CONST);
                 }
             }
         });
@@ -129,13 +142,13 @@ public class RideSummaryActivity extends AppCompatActivity {
                         new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail())
                 );
                 if(removeBool == true){
-                    updateDataBase("You left the ride");
+                    updateDataBase("You left the ride", LEFT_CONST);
                 }
             }
         });
     }
 
-    private void updateDataBase(String message){
+    private void updateDataBase(String message, final int type){
         final String fmessage = message;
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -150,7 +163,40 @@ public class RideSummaryActivity extends AppCompatActivity {
                 mRSAdapter.swapList(mCreateRideDetailData.getRideUsers());
                 mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
                 Toast.makeText(RideSummaryActivity.this, fmessage, Toast.LENGTH_SHORT).show();
+
+                toggleVisibilty(type);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_logout_btn:
+                LogHandle.logout(FirebaseAuth.getInstance(), this);
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    private void toggleVisibilty(int type){
+        if(type == JOINED_CONST){
+            mJoinButton.setVisibility(View.GONE);
+            mLeaveButton.setVisibility(View.VISIBLE);
+        } else if(type == LEFT_CONST){
+            mJoinButton.setVisibility(View.VISIBLE);
+            mLeaveButton.setVisibility(View.GONE);
+        }
     }
 }

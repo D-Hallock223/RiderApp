@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -41,6 +45,8 @@ public class CreateRideActivity extends AppCompatActivity {
 
         fromLocationFinal = null;
         toLocationFinal = null;
+
+        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
 
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -97,5 +103,26 @@ public class CreateRideActivity extends AppCompatActivity {
 
     boolean checkAvailData(){
         return fromLocationFinal != null && toLocationFinal != null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_logout_btn:
+                LogHandle.logout(FirebaseAuth.getInstance(), this);
+                return true;
+
+            default:
+                return false;
+        }
     }
 }

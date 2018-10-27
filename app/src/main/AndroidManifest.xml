@@ -15,10 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD7dvJkB1FA3sOQ_wwrKL15V0FMhOKmSJU"/>
+            android:value="AIzaSyD7dvJkB1FA3sOQ_wwrKL15V0FMhOKmSJU" />
 
         <activity android:name=".Activity.MainActivity">
 
@@ -30,10 +29,11 @@
             <!-- </intent-filter> -->
         </activity>
         <activity android:name=".Activity.LoginActivity">
-            <intent-filter> -->
-            <action android:name="android.intent.action.MAIN" /> -->
-
-            <category android:name="android.intent.category.LAUNCHER" />
+            <intent-filter>
+                -->
+                <action android:name="android.intent.action.MAIN" />
+                -->
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".Activity.RegisterActivity" />
@@ -62,56 +62,55 @@
         <activity
             android:name=".Activity.CreateRideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xhaxs.rider.Activity.SearchRideActivity" />
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
 
         </activity>
         <activity
             android:name=".Activity.CreateRideOtherDetails"
             android:configChanges="orientation|keyboardHidden|screenSize">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xhaxs.rider.Activity.CreateRideActivity" />
-
         </activity>
         <activity
             android:name=".Activity.SearchRideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".Activity.RideSummaryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xhaxs.rider.Activity.SearchRideActivity" />
-
         </activity>
-
         <activity
             android:name=".Activity.ProfileDetailsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-
+        <activity android:name=".ProfileViewActivity"></activity>
     </application>
 
 </manifest>

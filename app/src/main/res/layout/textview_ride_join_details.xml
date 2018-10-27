@@ -8,7 +8,8 @@
     android:paddingHorizontal="8dp"
     android:paddingVertical="4dp"
     android:layout_marginVertical="2dp"
-    android:id="@+id/ll_ride_join_user_summary">
+    android:id="@+id/ll_ride_join_user_summary"
+    android:backgroundTint="@android:color/holo_orange_light">
 
     <TextView
         android:layout_width="match_parent"
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="rider Email id"
         android:id="@+id/tv_ride_join_user_email"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@android:color/black"
         android:textSize="16dp"/>
 
 </LinearLayout>

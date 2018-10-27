@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.Datatype.PlaceData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
+import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.facebook.login.Login;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -74,12 +77,10 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(mCurrentUser  == null){
-            Intent nintent = new Intent(CreateRideOtherDetails.this, LoginActivity.class);
-            startActivity(nintent);
-            finish();
-        }
+
         Intent intent = getIntent();
 
         mFromLocatioFinalMain = findViewById(R.id.tv_from_location_final);
@@ -255,4 +256,27 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
         if (cMaxCount < 0) cMaxCount = 0;
         mMaxCountDisplay.setText("" + cMaxCount);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.menu_logout_btn:
+                LogHandle.logout(FirebaseAuth.getInstance(), this);
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+
 }

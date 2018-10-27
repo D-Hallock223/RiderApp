@@ -196,4 +196,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         cursor.close();
         return res;
     }
+
+    public void close(){
+        finish();
+    }
 }

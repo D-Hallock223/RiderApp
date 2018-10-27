@@ -152,20 +152,21 @@ public class CreateRideDetailData implements Parcelable {
     }
 
     public boolean addUser(UserSumData cUserData) {
-        if(cUserData.getUid() == rideOwner.getUid()) return false;
+        if(cUserData.getUid().equals(this.rideOwner.getUid())) return false;
+
         if(rideUsers.size() == maxAccomodation) return false;
         for(int i = 0; i < rideUsers.size(); ++i){
-            if(cUserData.getUid() == rideUsers.get(i).getUid()) return false;
+            if(cUserData.getUid().equals(rideUsers.get(i).getUid())) return false;
         }
         rideUsers.add(cUserData);
         return true;
     }
 
     public boolean removeUser(UserSumData cUserData){
-        if(cUserData.getUid() == rideOwner.getUid()) return false;
+        if(cUserData.getUid().equals(rideOwner.getUid())) return false;
         if(rideUsers.size() == 1) return false;
         for(int i = 0; i < rideUsers.size(); ++i){
-            if(cUserData.getUid() == rideUsers.get(i).getUid()){
+            if(cUserData.getUid().equals(rideUsers.get(i).getUid())){
                 rideUsers.remove(i);
                 return true;
             }
@@ -221,5 +222,17 @@ public class CreateRideDetailData implements Parcelable {
                 this.rideUsers.add(temp);
             }
         }
+    }
+
+    public boolean isOwner(String id){
+        return (rideOwner.getUid().equals(id) ? true : false);
+    }
+
+    public boolean isMember(String id){
+        if(rideOwner.getUid().equals(id)) return true;
+        for(int i = 0; i < rideUsers.size(); ++i){
+            if(rideUsers.get(i).getUid().equals(id)) return true;
+        }
+        return false;
     }
 }

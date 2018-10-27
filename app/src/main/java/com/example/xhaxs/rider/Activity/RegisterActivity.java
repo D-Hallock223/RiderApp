@@ -108,4 +108,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     }
+
+    public void close(){
+        finish();
+    }
 }
