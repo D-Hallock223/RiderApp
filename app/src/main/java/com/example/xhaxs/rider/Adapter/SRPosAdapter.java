@@ -41,7 +41,7 @@ public class SRPosAdapter extends RecyclerView.Adapter<SRPosAdapter.SRPosVH> {
         srPosVH.mLinearLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSearchRiderActivity.showDetails(mCreateRideDetailData[index]);
+                mSearchRiderActivity.showDetails(mCreateRideDetailData[index], index);
             }
         });
     }
@@ -55,6 +55,11 @@ public class SRPosAdapter extends RecyclerView.Adapter<SRPosAdapter.SRPosVH> {
     public void swapList(CreateRideDetailData[] createRideDetailData) {
         mCreateRideDetailData = createRideDetailData;
         notifyDataSetChanged();
+    }
+
+    public void updateSpecificItem(CreateRideDetailData crdd, int index){
+        mCreateRideDetailData[index] = crdd;
+        notifyItemChanged(index);
     }
 
     public static class SRPosVH extends RecyclerView.ViewHolder {
@@ -74,4 +79,5 @@ public class SRPosAdapter extends RecyclerView.Adapter<SRPosAdapter.SRPosVH> {
             mLinearLayoutParent = view.findViewById(R.id.parentSR_POS);
         }
     }
+
 }

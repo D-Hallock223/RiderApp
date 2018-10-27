@@ -65,7 +65,12 @@ public class RideUserJoinSummaryAdapter extends RecyclerView.Adapter<RideUserJoi
     }
 
     public void swapList(ArrayList<UserSumData> userSumData1) {
-        userSumData = userSumData1;
+        userSumData = null;
+        if(userSumData1.size() != 0){
+            userSumData = userSumData1;
+        } else {
+            userSumData = new ArrayList<>();
+        }
         notifyDataSetChanged();
     }
 }

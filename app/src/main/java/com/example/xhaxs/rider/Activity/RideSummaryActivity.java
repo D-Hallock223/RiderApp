@@ -57,6 +57,8 @@ public class RideSummaryActivity extends AppCompatActivity {
     private ArrayList<UserSumData> userSumData;
 
     private FirebaseUser mCurrentUser;
+    private SearchRideActivity mSearchRideActivity;
+    private int rideIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +73,17 @@ public class RideSummaryActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
+        mSearchRideActivity = (SearchRideActivity) getParent();
 
         if (intent.hasExtra("RideDetail")) {
             mCreateRideDetailData = (CreateRideDetailData) intent.getParcelableExtra("RideDetail");
             Log.d(this.getClass().getName(), mCreateRideDetailData.toString());
+        } else {
+            finish();
+        }
+
+        if(intent.hasExtra("RideIndex")){
+            rideIndex = intent.getIntExtra("RideIndex", -1);
         } else {
             finish();
         }
@@ -160,15 +169,17 @@ public class RideSummaryActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
-                mRSAdapter.swapList(mCreateRideDetailData.getRideUsers());
-                mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
-                Toast.makeText(RideSummaryActivity.this, fmessage, Toast.LENGTH_SHORT).show();
-
-                toggleVisibilty(type);
-                finish();
+                if(task.isSuccessful()) {
+                    toggleVisibilty(type);
+                    mRSAdapter.swapList(mCreateRideDetailData.getRideUsers());
+                    mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
+                    Toast.makeText(RideSummaryActivity.this, fmessage, Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Log.d(this.getClass().getName(), "Error Updating Children");
+                }
             }
         });
-
     }
 
     @Override
@@ -200,5 +211,14 @@ public class RideSummaryActivity extends AppCompatActivity {
             mJoinButton.setVisibility(View.VISIBLE);
             mLeaveButton.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void finish(){
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("RideUpdate", mCreateRideDetailData);
+        returnIntent.putExtra("RideIndex", rideIndex);
+        setResult(RESULT_OK, returnIntent);
+        super.finish();
     }
 }

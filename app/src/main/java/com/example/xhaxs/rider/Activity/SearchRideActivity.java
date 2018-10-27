@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,7 @@ public class SearchRideActivity extends AppCompatActivity {
 
     private static final String LOG_CLASS = CreateRideActivity.class.getName();
     private static final String URL_AUTO_PLACE_CONST = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
+    private static final int REQUEST_CODE = 3;
     private final Activity activity = this;
 
     private PlaceAutocompleteFragment placeAutocompleteFragmentFrom;
@@ -136,11 +138,12 @@ public class SearchRideActivity extends AppCompatActivity {
 
     }
 
-    public void showDetails(CreateRideDetailData createRideDetailData) {
+    public void showDetails(CreateRideDetailData createRideDetailData, int index) {
         Log.d(this.getClass().getName(), "Showing result for ------------------------------------------------ ++++++++++++\n\t" + createRideDetailData.toString());
         Intent intent = new Intent(this, RideSummaryActivity.class);
         intent.putExtra("RideDetail", createRideDetailData);
-        startActivity(intent);
+        intent.putExtra("RideIndex",  index);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     public void swapPosData(CreateRideDetailData[] createRideDetailData) {
@@ -150,6 +153,11 @@ public class SearchRideActivity extends AppCompatActivity {
             mCreateRideDetailData = createRideDetailData;
         }
         mSRPosAdapter.swapList(mCreateRideDetailData);
+    }
+
+    public void updateAdapterAtIndex(CreateRideDetailData createRideDetailData, int index){
+        mCreateRideDetailData[index] = createRideDetailData;
+        mSRPosAdapter.updateSpecificItem(mCreateRideDetailData[index], index);
     }
 
     public String makePosRideURL() {
@@ -187,6 +195,18 @@ public class SearchRideActivity extends AppCompatActivity {
 
             default:
                 return false;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+            CreateRideDetailData createRideDetailData = data.getParcelableExtra("RideUpdate");
+            int rideIndex = data.getIntExtra("RideIndex", -1);
+            if(rideIndex != -1){
+                updateAdapterAtIndex(createRideDetailData, rideIndex);
+            }
         }
     }
 }
