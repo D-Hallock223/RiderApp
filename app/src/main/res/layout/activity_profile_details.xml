@@ -45,10 +45,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:inputType="phone"
                     android:text="+91"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    />
 
                 <EditText
                     android:id="@+id/et_sumit_profile_phone"
