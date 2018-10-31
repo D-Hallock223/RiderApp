@@ -37,18 +37,27 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:id="@+id/bt_rsu_join_ride"
                 android:layout_marginHorizontal="16dp"
-                android:visibility="gone"
                 />
 
-            <Button
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Leave"
-                android:background="@drawable/next_button_paint"
-                android:backgroundTint="@color/colorAccent"
-                android:id="@+id/bt_rsu_leave_ride"
-                android:visibility="gone"
-                android:layout_marginHorizontal="16dp"/>
+                android:orientation="horizontal"
+                android:id="@+id/ll_leave_button_layout">
+
+                <include layout="@layout/get_directions_to_start" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Leave"
+                    android:background="@drawable/next_button_paint"
+                    android:backgroundTint="@color/colorAccent"
+                    android:id="@+id/bt_rsu_leave_ride"
+                    android:visibility="visible"
+                    android:layout_marginHorizontal="16dp"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

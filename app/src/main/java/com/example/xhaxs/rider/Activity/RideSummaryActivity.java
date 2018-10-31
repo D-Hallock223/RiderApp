@@ -63,6 +63,8 @@ public class RideSummaryActivity extends AppCompatActivity {
     private Button mLeaveButton;
     private Button mFinishRideButton;
 
+    private LinearLayout mButtonGetStartDirections;
+    private LinearLayout mLLLeaveButton;
 
     private LinearLayout mGetDirectionsButton;
     private LinearLayout mStartRideButtons;
@@ -114,13 +116,15 @@ public class RideSummaryActivity extends AppCompatActivity {
         mStartRideButtons = findViewById(R.id.ll_rsu_on_ride_start);
         mTextViewRideFinishMessage = findViewById(R.id.tv_rsu_finished_ride_message);
         mTextViewStartTime = findViewById(R.id.tv_rsu_journey_time);
+        mButtonGetStartDirections = findViewById(R.id.bt_ll_rsu_start_dir);
+        mLLLeaveButton = findViewById(R.id.ll_leave_button_layout);
 
         mStartRideButtons.setVisibility(View.GONE);
         mTextViewRideFinishMessage.setVisibility(View.GONE);
 
         if(mCreateRideDetailData.isOwner(mCurrentUser.getUid())){
             mJoinButton.setVisibility(View.GONE);
-            mLeaveButton.setVisibility(View.GONE);
+            mLLLeaveButton.setVisibility(View.GONE);
             checkIfTimeToStartRide();
             rideFinished();
         } else {
@@ -143,16 +147,6 @@ public class RideSummaryActivity extends AppCompatActivity {
                 .getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.SHORT);
         String strStartTime = dateFormat.format(mCreateRideDetailData.getJourneyTime().getTime());
         mTextViewStartTime.setText("Starts On: " + strStartTime);
- 
-        /* TODO
-         * 1. Add the owner Image
-         * 2. Add the Owner Name
-         * 3. Add From Location
-         * 4. Add To Location
-         * 5. Add Max Number Of Riders
-         * 6. Add Current Number of Riders
-         * 7. Show all the current Owners
-         */
 
         mRSRecyclerView = findViewById(R.id.rv_rsu_rider_details);
         mRSRecyclerView.setHasFixedSize(true);
@@ -212,6 +206,25 @@ public class RideSummaryActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        mButtonGetStartDirections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng latLng = mCreateRideDetailData.getFromLoc().getLatLng();
+                Uri destinationIntentUri = Uri.parse("google.navigation:q="
+                        + Double.toString(latLng.latitude)
+                        + ","
+                        + Double.toString(latLng.longitude));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, destinationIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if(mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(RideSummaryActivity.this, "Your Phone does not support GPS navigation", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void updateDataBase(String message, final int type){
@@ -267,10 +280,10 @@ public class RideSummaryActivity extends AppCompatActivity {
     private void toggleVisibilty(int type){
         if(type == JOINED_CONST){
             mJoinButton.setVisibility(View.GONE);
-            mLeaveButton.setVisibility(View.VISIBLE);
+            mLLLeaveButton.setVisibility(View.VISIBLE);
         } else if(type == LEFT_CONST){
             mJoinButton.setVisibility(View.VISIBLE);
-            mLeaveButton.setVisibility(View.GONE);
+            mLLLeaveButton.setVisibility(View.GONE);
         }
     }
 
@@ -296,7 +309,7 @@ public class RideSummaryActivity extends AppCompatActivity {
         if(mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED){
             mTextViewRideFinishMessage.setVisibility(View.VISIBLE);
             mJoinButton.setVisibility(View.GONE);
-            mLeaveButton.setVisibility(View.GONE);
+            mLLLeaveButton.setVisibility(View.GONE);
             return true;
         } else {
             mTextViewRideFinishMessage.setVisibility(View.GONE);

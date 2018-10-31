@@ -44,6 +44,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:paddingHorizontal="4dp"
                     android:text="@string/from_location" />
 
@@ -53,6 +55,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="4dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:text="@string/from_location" />
 
             </LinearLayout>

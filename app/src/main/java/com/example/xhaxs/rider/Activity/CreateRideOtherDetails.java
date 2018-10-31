@@ -188,8 +188,8 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
 
                 mCreateRideDetailData = new CreateRideDetailData(
                         new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()),
-                        fromPlaceData,
                         toPlaceData,
+                        fromPlaceData,
                         calendarFinal,
                         cMaxCount
                 );
