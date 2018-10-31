@@ -31,32 +31,6 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
         mSearchRideActivity = searchRideActivity;
     }
 
-    private CreateRideDetailData[] tempo(PlaceData to, PlaceData from) {
-        UserSumData userSumData = new UserSumData("1", "temp", "temp@gmail.com");
-        mCreateRideDetailData = new CreateRideDetailData[5];
-        mCreateRideDetailData[0] = new CreateRideDetailData(userSumData, from,
-                to,
-                Calendar.getInstance(),
-                4);
-        mCreateRideDetailData[1] = new CreateRideDetailData(userSumData, from,
-                to,
-                Calendar.getInstance(),
-                4);
-        mCreateRideDetailData[2] = new CreateRideDetailData(userSumData, from,
-                to,
-                Calendar.getInstance(),
-                4);
-        mCreateRideDetailData[3] = new CreateRideDetailData(userSumData, from,
-                to,
-                Calendar.getInstance(),
-                4);
-        mCreateRideDetailData[4] = new CreateRideDetailData(userSumData, from,
-                to,
-                Calendar.getInstance(),
-                4);
-        return mCreateRideDetailData;
-    }
-
     @Override
     protected CreateRideDetailData[] doInBackground(String... strings) {
         Log.d(this.getClass().getName(), "------Getting Possible Rides----------" + strings[0]);
@@ -65,20 +39,6 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
 
     @Override
     protected void onPostExecute(CreateRideDetailData[] createRideDetailData) {
-//        mGeoDataClient = Places.getGeoDataClient(mSearchRideActivity.getApplicationContext());
-//        mGeoDataClient.getPlaceById("ChIJL_P_CXMEDTkRw0ZdG-0GVvw").addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
-//            @Override
-//            public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
-//                if(task.isSuccessful()){
-//                    PlaceBufferResponse places = task.getResult();
-//                    Place place = places.get(0);
-//                    mCreateRideDetailData = tempo(new PlaceData(place.getName().toString(), place.getAddress().toString(), place.getId(), place.getLatLng()),
-//                            new PlaceData(place.getName().toString(), place.getAddress().toString(), place.getId(), place.getLatLng()));
-//                    mSearchRideActivity.swapPosData(mCreateRideDetailData);
-//                    places.release();
-//                }
-//            }
-//        });
 
         final DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -108,15 +68,14 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
                             Log.d("------------", "Printing ride value -- \n" +
                                     ride.toString()
                                 );
-                            if (((Map<String, Object>)ride.get("to_loc"))
+                            if (((Map<String, Object>)ride.get(CreateRideDetailData.TO_LOC_STRING))
                                     .get("id")
                                     .toString()
                                     .contentEquals(mSearchRideActivity.getTovalue().getId())
-                                    ) {
+                                    &&
+                                  (Integer.parseInt(ride.get(CreateRideDetailData.RIDE_FINISH_STRING).toString()) == CreateRideDetailData.RIDE_UNDONE)
+                                ) {
 
-                                //TODO
-                                //1. convert the received data into Create Ride Detail Data Object
-                                //2. swap the adapter with the received data
                                 Log.d(this.getClass().getName(), "************** CALLING MAP FROM RIDE DETAIL TASK *************************");
                                 createRideDetailDataArrayList.add(new CreateRideDetailData(entry.getKey(), (Map<String, Object>)entry.getValue()));
                             }

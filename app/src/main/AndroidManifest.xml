@@ -62,9 +62,6 @@
         <activity
             android:name=".Activity.CreateRideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.xhaxs.rider.Activity.SearchRideActivity" />
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -110,7 +107,12 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".ProfileViewActivity"></activity>
+
+        <activity android:name=".ProfileViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+
+        <activity android:name=".Activity.MyRidesActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
 
 </manifest>

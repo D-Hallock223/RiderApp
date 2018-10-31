@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,11 +18,13 @@ import android.widget.Toast;
 
 import com.example.xhaxs.rider.Adapter.SRPosAdapter;
 import com.example.xhaxs.rider.AsyncTasks.RideDetailTask;
+import com.example.xhaxs.rider.CommonBottomNavigationHandle;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -43,10 +46,12 @@ public class SearchRideActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 3;
     private final Activity activity = this;
 
+    private BottomNavigationView mBottomNavigationView;
+
     private PlaceAutocompleteFragment placeAutocompleteFragmentFrom;
     private PlaceAutocompleteFragment placeAutocompleteFragmentTo;
 
-    private ImageButton mFabCreateNewRide;
+//    private ImageButton mFabCreateNewRide;
 
     private RecyclerView mRVPossibleLocations;
     private SRPosAdapter mSRPosAdapter;
@@ -66,24 +71,42 @@ public class SearchRideActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_ride);
 
         getSupportActionBar().setElevation(0);
+        getSupportActionBar().setTitle("Search Available Rides");
 
         LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
 
-        mFabCreateNewRide = findViewById(R.id.fab_create_new_ride_sr);
-
-        mFabCreateNewRide.setOnClickListener(new View.OnClickListener() {
+        mBottomNavigationView = findViewById(R.id.bn_bottom_nav);
+        mBottomNavigationView.setSelectedItemId(R.id.mi_search_ride);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SearchRideActivity.this, CreateRideActivity.class);
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                CommonBottomNavigationHandle.chooseSelectedActivity(SearchRideActivity.this, menuItem);
+                return true;
             }
         });
+
+
+//        mFabCreateNewRide = findViewById(R.id.fab_create_new_ride_sr);
+//
+//        mFabCreateNewRide.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(SearchRideActivity.this, CreateRideActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         mSearchAvailRides = findViewById(R.id.ib_search_src_dest_sr);
         mRideDetailTask = null;
 
         placeAutocompleteFragmentFrom = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_from);
         placeAutocompleteFragmentTo = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_to);
+
+        placeAutocompleteFragmentFrom
+                .setFilter(new AutocompleteFilter.Builder().setTypeFilter(Place.TYPE_COUNTRY).setCountry("IN").build());
+
+        placeAutocompleteFragmentTo
+                .setFilter(new AutocompleteFilter.Builder().setTypeFilter(Place.TYPE_COUNTRY).setCountry("IN").build());
 
         placeAutocompleteFragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override

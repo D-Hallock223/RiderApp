@@ -13,12 +13,16 @@ import java.util.Map;
 public class CreateRideDetailData implements Parcelable {
     private static final String LOG_CLASS = CreateRideDetailData.class.getName();
 
-    private static final String RIDE_OWNER_STRING = "ride_owner";
-    private static final String TO_LOC_STRING = "to_loc";
-    private static final String FROM_LOC_STRING = "from_loc";
-    private static final String RIDE_USER_ARRAY_STRING = "ride_users";
-    private static final String JOURNEY_TIME_STRING = "journey_time";
+    public static final String RIDE_OWNER_STRING = "ride_owner";
+    public static final String TO_LOC_STRING = "to_loc";
+    public static final String FROM_LOC_STRING = "from_loc";
+    public static final String RIDE_USER_ARRAY_STRING = "ride_users";
+    public static final String JOURNEY_TIME_STRING = "journey_time";
     private static final String MAX_ACC_STRING = "max_accomodation";
+    public static final String RIDE_FINISH_STRING = "is_ride_finish";
+
+    public static final int RIDE_UNDONE = -1;
+    public static final int RIDE_FINSISHED = 1;
 
     private String rideID;
 
@@ -36,6 +40,7 @@ public class CreateRideDetailData implements Parcelable {
     private ArrayList<UserSumData> rideUsers;
     private long journeyTime;
     private int maxAccomodation;
+    private int rideFinished;
 
     public CreateRideDetailData(Parcel in){
         this.rideID = in.readString();
@@ -45,6 +50,7 @@ public class CreateRideDetailData implements Parcelable {
         this.rideUsers = in.readArrayList(UserSumData.class.getClassLoader());
         journeyTime = in.readLong();
         maxAccomodation = in.readInt();
+        rideFinished = in.readInt();
     }
 
     @Override
@@ -60,6 +66,7 @@ public class CreateRideDetailData implements Parcelable {
         dest.writeList(rideUsers);
         dest.writeLong(journeyTime);
         dest.writeInt(maxAccomodation);
+        dest.writeInt(rideFinished);
     }
 
     public CreateRideDetailData(UserSumData rideOwner, PlaceData toLoc, PlaceData fromLoc, Calendar journeyTime, int maxAccomodation) {
@@ -71,6 +78,7 @@ public class CreateRideDetailData implements Parcelable {
         this.fromLoc = fromLoc;
         this.journeyTime = journeyTime.getTimeInMillis();
         this.maxAccomodation = maxAccomodation;
+        this.rideFinished = RIDE_UNDONE;
     }
 
     public static final Creator<CreateRideDetailData> CREATOR = new Creator<CreateRideDetailData>() {
@@ -181,9 +189,10 @@ public class CreateRideDetailData implements Parcelable {
         map.put(TO_LOC_STRING, toLoc.toMap());
         map.put(JOURNEY_TIME_STRING, journeyTime);
         map.put(MAX_ACC_STRING, maxAccomodation);
+        map.put(RIDE_FINISH_STRING, rideFinished);
         HashMap<String, Object> rideUsersHash = new HashMap<>();
         for(int i = 0; i < rideUsers.size(); ++i){
-            rideUsersHash.put(Integer.toString(i), rideUsers.get(i).toMap());
+            rideUsersHash.put(rideUsers.get(i).getUid(), rideUsers.get(i).toMap());
         }
         map.put(RIDE_USER_ARRAY_STRING, rideUsersHash);
         Log.d("000","--------------------------");
@@ -210,17 +219,17 @@ public class CreateRideDetailData implements Parcelable {
         Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- JOURNEY TIME -- CREATE RIDE DETAIL");
         this.journeyTime = Long.parseLong(map.get(JOURNEY_TIME_STRING).toString());
 
-        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- USER ARRAY DATA -- CREATE RIDE DETAIL");
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- RIDE FINISH -- CREATE RIDE DETAIL");
+        this.rideFinished = Integer.parseInt(map.get(RIDE_FINISH_STRING).toString());
 
-        ArrayList<Map<String, Object>> ru = (ArrayList<Map<String,Object>>) map.get(RIDE_USER_ARRAY_STRING);
+        Log.d(this.getClass().getName(), "************** CALLING MAP FOR -- USER ARRAY DATA -- CREATE RIDE DETAIL");
+        Map<String, Object> ru = (Map<String,Object>) map.get(RIDE_USER_ARRAY_STRING);
 
         this.rideUsers = new ArrayList<>();
 
-        for(int i = 0; i < ru.size(); ++i){
-            UserSumData temp = new UserSumData(ru.get(i));
-            if(temp.getUid() != rideOwner.getUid()){
-                this.rideUsers.add(temp);
-            }
+        for(Map.Entry<String, Object> entry : ru.entrySet()){
+            UserSumData temp = new UserSumData((Map<String, Object>)entry.getValue());
+            this.rideUsers.add(temp);
         }
     }
 
@@ -234,5 +243,15 @@ public class CreateRideDetailData implements Parcelable {
             if(rideUsers.get(i).getUid().equals(id)) return true;
         }
         return false;
+    }
+
+    public int getRideFinished() {
+        return rideFinished;
+    }
+
+    public boolean setRideFinished(int rideFinished) {
+        if(this.rideFinished == rideFinished) return false;
+        this.rideFinished = rideFinished;
+        return true;
     }
 }

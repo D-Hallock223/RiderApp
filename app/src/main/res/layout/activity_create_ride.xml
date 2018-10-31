@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".Activity.CreateRideActivity">
 
+    <include layout="@layout/bottom_nav_layout" />
+
     <LinearLayout
         android:id="@+id/search_bar_createRider"
         android:layout_width="match_parent"
@@ -24,7 +26,7 @@
         android:id="@+id/b_next_cr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/bn_bottom_nav"
         android:layout_marginHorizontal="24dp"
         android:layout_marginVertical="16dp"
         android:background="@drawable/next_button_paint"

@@ -185,14 +185,6 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
         mSubmitRideDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* TODO
-                 *
-                 * 1. Replace UserSumData in Create RideDetail with user id of current User
-                 * 2. Store the data in Firebase
-                 *
-                 */
-
-                // ...
 
                 mCreateRideDetailData = new CreateRideDetailData(
                         new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()),
@@ -243,7 +235,7 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         hourFinal = hourOfDay;
         minuteFinal = minute;
-        Calendar calendar = new GregorianCalendar(yearFinal, monthFinal, dayFinal, hourFinal, monthFinal);
+        Calendar calendar = new GregorianCalendar(yearFinal, monthFinal, dayFinal, hourFinal, minuteFinal);
         calendarFinal = calendar;
         java.text.DateFormat dateFormat = java.text.DateFormat
                 .getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.SHORT);

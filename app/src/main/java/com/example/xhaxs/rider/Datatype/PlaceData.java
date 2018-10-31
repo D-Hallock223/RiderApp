@@ -98,7 +98,7 @@ public class PlaceData implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return getName();
+        return getAddress();
     }
 
     public HashMap<String, Object> toMap() {

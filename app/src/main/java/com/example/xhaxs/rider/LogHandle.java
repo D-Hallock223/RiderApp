@@ -12,13 +12,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 public final class LogHandle {
 
-    public static void checkLogin(FirebaseAuth firebaseAuth, Activity activity){
+    public static FirebaseUser checkLogin(FirebaseAuth firebaseAuth, Activity activity){
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if(currentUser == null){
             Intent intent = new Intent(activity.getApplicationContext(), LoginActivity.class);
             activity.startActivity(intent);
             activity.finish();
         }
+        return currentUser;
     }
 
     public static void LogoutMenuInflate(){

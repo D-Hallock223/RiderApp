@@ -21,6 +21,101 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/rl_jb_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Join"
+                android:background="@drawable/next_button_paint"
+                android:backgroundTint="@color/colorPrimary"
+                android:id="@+id/bt_rsu_join_ride"
+                android:layout_marginHorizontal="16dp"
+                android:visibility="gone"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Leave"
+                android:background="@drawable/next_button_paint"
+                android:backgroundTint="@color/colorAccent"
+                android:id="@+id/bt_rsu_leave_ride"
+                android:visibility="gone"
+                android:layout_marginHorizontal="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/ll_rsu_on_ride_start">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:id="@+id/bt_ll_rsu_get_dir"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="4dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:background="@drawable/next_button_paint">
+
+                    <ImageView
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="6dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/baseline_directions_24"
+                        android:backgroundTint="@color/white"
+                        android:scaleType="fitXY"
+                        android:paddingHorizontal="12dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Get Directions"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:gravity="center_vertical"
+                        android:paddingRight="16dp"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/bt_rsu_finish_ride"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/next_button_paint"
+                    android:backgroundTint="@color/colorAccent"
+                    android:text="finish"
+                    android:layout_marginLeft="4dp"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="16dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:textSize="24sp"
+                android:text="(Ride Finished)"
+                android:id="@+id/tv_rsu_finished_ride_message"
+                />
+
+
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/ll_rs_owner_det"
             android:layout_width="match_parent"
@@ -52,7 +147,10 @@
             android:paddingHorizontal="8dp"
             android:paddingTop="16dp"
             android:paddingBottom="8dp"
-            android:layout_below="@+id/ll_rs_owner_det">
+            android:id="@+id/ll_oth_rs_det"
+            android:layout_below="@+id/ll_rs_owner_det"
+            android:layout_above="@+id/rl_jb_button"
+            android:layout_marginBottom="8dp">
 
             <TextView
                 android:id="@+id/tv_rsu_from_loc"
@@ -67,6 +165,15 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/to_location" />
+
+            <TextView
+                android:id="@+id/tv_rsu_journey_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Journey time" />
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -120,33 +227,6 @@
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="4dp"
-            android:layout_alignParentBottom="true">
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Join"
-                android:background="@drawable/next_button_paint"
-                android:backgroundTint="@color/colorPrimary"
-                android:id="@+id/bt_rsu_join_ride"
-                android:layout_marginHorizontal="16dp"
-                />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Leave"
-                android:background="@drawable/next_button_paint"
-                android:backgroundTint="@color/colorAccent"
-                android:id="@+id/bt_rsu_leave_ride"
-                android:layout_marginHorizontal="16dp"/>
-
-        </RelativeLayout>
 
         </RelativeLayout>
 

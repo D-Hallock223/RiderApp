@@ -1,6 +1,7 @@
 package com.example.xhaxs.rider.Activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,15 +12,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.Adapter.RideUserJoinSummaryAdapter;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
+import com.example.xhaxs.rider.Datatype.PlaceData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.facebook.login.Login;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +42,7 @@ public class RideSummaryActivity extends AppCompatActivity {
 
     private static final int JOINED_CONST = 1;
     private static final int LEFT_CONST = 2;
+    private static final int FINISHED_RIDE_CONST = 3;
 
     private CreateRideDetailData mCreateRideDetailData;
     private CircleImageView mImageViewOwnerImage;
@@ -46,6 +52,8 @@ public class RideSummaryActivity extends AppCompatActivity {
     private TextView mTextViewMaxRiders;
     private TextView mTextViewCurRiders;
     private TextView mRcyclerViewUsers;
+    private TextView mTextViewRideFinishMessage;
+    private TextView mTextViewStartTime;
 
     private RecyclerView mRSRecyclerView;
     private RideUserJoinSummaryAdapter mRSAdapter;
@@ -53,6 +61,11 @@ public class RideSummaryActivity extends AppCompatActivity {
 
     private Button mJoinButton;
     private Button mLeaveButton;
+    private Button mFinishRideButton;
+
+
+    private LinearLayout mGetDirectionsButton;
+    private LinearLayout mStartRideButtons;
 
     private ArrayList<UserSumData> userSumData;
 
@@ -96,24 +109,41 @@ public class RideSummaryActivity extends AppCompatActivity {
         mTextViewOwner = findViewById(R.id.tv_rsu_owner_name);
         mJoinButton = findViewById(R.id.bt_rsu_join_ride);
         mLeaveButton = findViewById(R.id.bt_rsu_leave_ride);
+        mGetDirectionsButton = findViewById(R.id.bt_ll_rsu_get_dir);
+        mFinishRideButton = findViewById(R.id.bt_rsu_finish_ride);
+        mStartRideButtons = findViewById(R.id.ll_rsu_on_ride_start);
+        mTextViewRideFinishMessage = findViewById(R.id.tv_rsu_finished_ride_message);
+        mTextViewStartTime = findViewById(R.id.tv_rsu_journey_time);
+
+        mStartRideButtons.setVisibility(View.GONE);
+        mTextViewRideFinishMessage.setVisibility(View.GONE);
 
         if(mCreateRideDetailData.isOwner(mCurrentUser.getUid())){
             mJoinButton.setVisibility(View.GONE);
             mLeaveButton.setVisibility(View.GONE);
+            checkIfTimeToStartRide();
+            rideFinished();
         } else {
-            if(mCreateRideDetailData.isMember(mCurrentUser.getUid())){
-                toggleVisibilty(JOINED_CONST);
-            } else {
-                toggleVisibilty(LEFT_CONST);
+            if(rideFinished() == false) {
+                if (mCreateRideDetailData.isMember(mCurrentUser.getUid())) {
+                    toggleVisibilty(JOINED_CONST);
+                } else {
+                    toggleVisibilty(LEFT_CONST);
+                }
             }
         }
 
-        mTextViewToLoc.setText(mCreateRideDetailData.getToLoc().toString());
-        mTextViewFromLoc.setText(mCreateRideDetailData.getFromLoc().toString());
+        mTextViewToLoc.setText("To: " + mCreateRideDetailData.getToLoc().toString());
+        mTextViewFromLoc.setText("From: " + mCreateRideDetailData.getFromLoc().toString());
         mTextViewMaxRiders.setText(Integer.toString(mCreateRideDetailData.getMaxAccomodation()));
         mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
         mTextViewOwner.setText(mCreateRideDetailData.getRideUsers().get(0).getUname());
 
+        java.text.DateFormat dateFormat = java.text.DateFormat
+                .getDateTimeInstance(java.text.DateFormat.SHORT, java.text.DateFormat.SHORT);
+        String strStartTime = dateFormat.format(mCreateRideDetailData.getJourneyTime().getTime());
+        mTextViewStartTime.setText("Starts On: " + strStartTime);
+ 
         /* TODO
          * 1. Add the owner Image
          * 2. Add the Owner Name
@@ -155,6 +185,33 @@ public class RideSummaryActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mGetDirectionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng latLng = mCreateRideDetailData.getToLoc().getLatLng();
+                Uri destinationIntentUri = Uri.parse("google.navigation:q="
+                        + Double.toString(latLng.latitude)
+                        + ","
+                        + Double.toString(latLng.longitude));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, destinationIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if(mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(RideSummaryActivity.this, "Your Phone does not support GPS navigation", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mFinishRideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCreateRideDetailData.setRideFinished(CreateRideDetailData.RIDE_FINSISHED)) {
+                    updateDataBase("Ride Finshed", FINISHED_RIDE_CONST);
+                }
+            }
+        });
     }
 
     private void updateDataBase(String message, final int type){
@@ -163,6 +220,8 @@ public class RideSummaryActivity extends AppCompatActivity {
 
         HashMap<String, Object> result = mCreateRideDetailData.toMap();
 
+        Log.d("--->>--->>---", result.toString());
+
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/Riders/" + mCreateRideDetailData.getRideID(), result);
         mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -170,9 +229,11 @@ public class RideSummaryActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
 
                 if(task.isSuccessful()) {
-                    toggleVisibilty(type);
-                    mRSAdapter.swapList(mCreateRideDetailData.getRideUsers());
-                    mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
+                    if(type != FINISHED_RIDE_CONST) {
+                        toggleVisibilty(type);
+                        mRSAdapter.swapList(mCreateRideDetailData.getRideUsers());
+                        mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
+                    }
                     Toast.makeText(RideSummaryActivity.this, fmessage, Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
@@ -220,5 +281,26 @@ public class RideSummaryActivity extends AppCompatActivity {
         returnIntent.putExtra("RideIndex", rideIndex);
         setResult(RESULT_OK, returnIntent);
         super.finish();
+    }
+
+    private void checkIfTimeToStartRide(){
+        Calendar calendar = Calendar.getInstance();
+        if(calendar.getTimeInMillis() > mCreateRideDetailData.getJourneyTime().getTimeInMillis() && mCreateRideDetailData.getRideFinished() != CreateRideDetailData.RIDE_FINSISHED){
+            mStartRideButtons.setVisibility(View.VISIBLE);
+        } else {
+            mStartRideButtons.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean rideFinished(){
+        if(mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED){
+            mTextViewRideFinishMessage.setVisibility(View.VISIBLE);
+            mJoinButton.setVisibility(View.GONE);
+            mLeaveButton.setVisibility(View.GONE);
+            return true;
+        } else {
+            mTextViewRideFinishMessage.setVisibility(View.GONE);
+            return false;
+        }
     }
 }
