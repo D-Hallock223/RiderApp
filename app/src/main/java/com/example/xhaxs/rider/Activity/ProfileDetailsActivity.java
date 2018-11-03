@@ -42,6 +42,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,11 +65,13 @@ public class ProfileDetailsActivity extends AppCompatActivity {
     private StorageReference mStorageRef,mImageRef;
     private FirebaseStorage mStorage;
     private UploadTask uploadTask;
+    private ProgressDialog progressDialog;
 
     private Uri selectImageUri;
     private String userNameFinal;
     private String countryCodeFinal;
     private String phoneNumberFinal;
+    private Uri url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         mPhoneNumber = findViewById(R.id.et_sumit_profile_phone);
         mSubmitDetails = findViewById(R.id.b_submit_profile_od);
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        progressDialog = new ProgressDialog(this);
         mProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,18 +175,32 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         String key = currentuser.getUid();
+
                                         ContentResolver cR = getContentResolver();
                                         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-
+                                        progressDialog.setMessage("Profile Picture Uploading ... ");
+                                        progressDialog.show();
                                         mStorage = FirebaseStorage.getInstance();
                                         mStorageRef = mStorage.getReference();
                                         mImageRef = mStorageRef.child("userImages/profilePictures/"+key+"/"
-                                                +UUID.randomUUID()+"."+mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
-                                        mImageRef.putFile(selectImageUri);
+                                                +selectImageUri.getLastPathSegment()+"."+mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
+                                        uploadTask = mImageRef.putFile(selectImageUri);
+                                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                                        url = taskSnapshot.getDownloadUri();
+//                                                        Picasso.get().load(url).into(mProfilePic);
+//                                                        mProfilePic.setImageURI(url);
 
-                                        /*TODO
-                                        CHECK VISIBILITY USING PROGRESSBAR;
-                                         */
+                                                        Toast.makeText(ProfileDetailsActivity.this, "Profile Picture Uploaded", Toast.LENGTH_LONG).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(ProfileDetailsActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
 
                                         mDatabase = FirebaseDatabase.getInstance().getReference("Users/"  + key);
                                         HashMap<String, Object> childUpdates = new HashMap<>();
@@ -191,9 +209,10 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                         childUpdates.put("countryCode",countryCodeFinal);
                                         childUpdates.put("phoneNumber", phoneNumberFinal);
                                         childUpdates.put("email",currentuser.getEmail());
-
+                                //        childUpdates.put("profilePicUrl",url);
                                         mDatabase.updateChildren(childUpdates);
 
+                                        progressDialog.dismiss();
                                         Intent intent = new Intent(ProfileDetailsActivity.this, SearchRideActivity.class);
                                         startActivity(intent);
                                         finish();
@@ -210,11 +229,14 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
+                && data != null && data.getData() != null ){
             selectImageUri = data.getData();
             if (null != selectImageUri) {
                 String path = getPathFromURI(selectImageUri);
                 mProfilePic.setImageURI(selectImageUri);
+
             }
         }
     }
