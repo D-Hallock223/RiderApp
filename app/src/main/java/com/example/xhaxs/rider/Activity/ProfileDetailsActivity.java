@@ -166,37 +166,43 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                         UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(userNameFinal)
                                 .build();
+
                         currentuser.updateProfile(userProfileChangeRequest)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        String key = currentuser.getUid();
-                                        ContentResolver cR = getContentResolver();
-                                        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
 
-                                        mStorage = FirebaseStorage.getInstance();
-                                        mStorageRef = mStorage.getReference();
-                                        mImageRef = mStorageRef.child("userImages/profilePictures/"+key+"/"
-                                                +UUID.randomUUID()+"."+mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
-                                        mImageRef.putFile(selectImageUri);
+                                        if(task.isSuccessful()) {
+                                            String key = currentuser.getUid();
+    //                                        ContentResolver cR = getContentResolver();
+    //                                        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+    //
+    //                                        mStorage = FirebaseStorage.getInstance();
+    //                                        mStorageRef = mStorage.getReference();
+    //                                        mImageRef = mStorageRef.child("userImages/profilePictures/"+key+"/"
+    //                                                +UUID.randomUUID()+"."+mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
+    //                                        mImageRef.putFile(selectImageUri);
 
-                                        /*TODO
-                                        CHECK VISIBILITY USING PROGRESSBAR;
-                                         */
+                                            /*TODO
+                                            CHECK VISIBILITY USING PROGRESSBAR;
+                                             */
 
-                                        mDatabase = FirebaseDatabase.getInstance().getReference("Users/"  + key);
-                                        HashMap<String, Object> childUpdates = new HashMap<>();
+                                            mDatabase = FirebaseDatabase.getInstance().getReference("Users/" + key);
+                                            HashMap<String, Object> childUpdates = new HashMap<>();
 
-                                        childUpdates.put("userName", userNameFinal);
-                                        childUpdates.put("countryCode",countryCodeFinal);
-                                        childUpdates.put("phoneNumber", phoneNumberFinal);
-                                        childUpdates.put("email",currentuser.getEmail());
+                                            childUpdates.put("userName", userNameFinal);
+                                            childUpdates.put("countryCode", countryCodeFinal);
+                                            childUpdates.put("phoneNumber", phoneNumberFinal);
+                                            childUpdates.put("email", currentuser.getEmail());
 
-                                        mDatabase.updateChildren(childUpdates);
+                                            mDatabase.updateChildren(childUpdates);
 
-                                        Intent intent = new Intent(ProfileDetailsActivity.this, SearchRideActivity.class);
-                                        startActivity(intent);
-                                        finish();
+                                            Intent intent = new Intent(ProfileDetailsActivity.this, SearchRideActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(ProfileDetailsActivity.this, "Error Saving Data!", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
                     }

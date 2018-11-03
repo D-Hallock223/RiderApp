@@ -3,6 +3,7 @@
     package="com.example.xhaxs.rider">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -31,9 +32,7 @@
         </activity>
         <activity android:name=".Activity.LoginActivity">
             <intent-filter>
-                -->
                 <action android:name="android.intent.action.MAIN" />
-                -->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -47,6 +46,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -60,6 +60,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Activity.CreateRideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
@@ -72,6 +73,7 @@
             <!-- </intent-filter> -->
 
         </activity>
+
         <activity
             android:name=".Activity.CreateRideOtherDetails"
             android:configChanges="orientation|keyboardHidden|screenSize">
@@ -97,6 +99,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xhaxs.rider.Activity.SearchRideActivity" />
         </activity>
+
         <activity
             android:name=".Activity.ProfileDetailsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
@@ -114,6 +117,7 @@
 
         <activity android:name=".Activity.MyRidesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
+
     </application>
 
 </manifest>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:id="@+id/ll_network_unavailable"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Network Not Available"
+        android:textSize="20dp"
+        android:textColor="@android:color/darker_gray"
+        android:textAllCaps="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:text="try again"
+        android:id="@+id/bt_net_try_again"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@android:color/transparent"/>
+
+</LinearLayout>

@@ -16,9 +16,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.Adapter.MyRidesAdapter;
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.CommonBottomNavigationHandle;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.LogHandle;
@@ -36,7 +40,15 @@ import java.util.Map;
 
 public class MyRidesActivity extends AppCompatActivity {
 
-    private final int REQUEST_CODE = 101;
+    private static final int REQUEST_CODE = 101;
+    private static final String NO_DATA_FOUND = "No Rides Found";
+    private static final String FETCHING_DATA = "Fetching Rides...";
+    private static final String ERROR_FETCHING = "Error Fetching Data!";
+
+    private TextView mMessage;
+
+    private LinearLayout mNetworkErrorLayout;
+    private Button mNetTryAgainButton;
 
     private BottomNavigationView mBottomNavigationView;
     private RecyclerView mRVMyRides;
@@ -52,6 +64,13 @@ public class MyRidesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_rides);
 
         mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), MyRidesActivity.this);
+        mMessage = findViewById(R.id.tv_my_rides_messages);
+
+        mNetworkErrorLayout = findViewById(R.id.ll_network_unavailable);
+        mNetTryAgainButton = findViewById(R.id.bt_net_try_again);
+
+        mMessage.setText(FETCHING_DATA);
+
 
         mCreateRideDetailData = null;
 
@@ -73,11 +92,36 @@ public class MyRidesActivity extends AppCompatActivity {
         mMyRidesAdapter = new MyRidesAdapter(MyRidesActivity.this, mCreateRideDetailData);
         mRVMyRides.setAdapter(mMyRidesAdapter);
 
-        Log.d("----", "--Called Loader Manager My Rides Activity");
+        if(mCreateRideDetailData == null){
+            mNetworkErrorLayout.setVisibility(View.GONE);
+            mRVMyRides.setVisibility(View.GONE);
+            mMessage.setVisibility(View.VISIBLE);
+            mMessage.setText(FETCHING_DATA);
+        }
+
+        mNetTryAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMyData();
+            }
+        });
+
         loadMyData();
     }
 
     private void loadMyData(){
+
+        mRVMyRides.setVisibility(View.GONE);
+        mNetworkErrorLayout.setVisibility(View.GONE);
+        mMessage.setVisibility(View.VISIBLE);
+        mMessage.setText(FETCHING_DATA);
+
+        if(AppUtils.isNetworkAvailable(this) == false){
+            mMessage.setVisibility(View.GONE);
+//            mMessage.setText(AppUtils.NETWORK_ERROR);
+            mNetworkErrorLayout.setVisibility(View.VISIBLE);
+            return;
+        }
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("Riders")
@@ -89,6 +133,8 @@ public class MyRidesActivity extends AppCompatActivity {
                         Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                         Log.d("MYRIDES----<<<<<<","Recieved Following Data For User --> " + mCurrentUser.getUid());
                         if(map == null) {
+                            mMessage.setVisibility(View.VISIBLE);
+                            mMessage.setText(NO_DATA_FOUND);
                             return;
                         }
                         Log.d("-=-=-=-=-=", map.toString());
@@ -103,12 +149,22 @@ public class MyRidesActivity extends AppCompatActivity {
                             createRideDetailDataArrayList.add(new CreateRideDetailData(entry.getKey(), (Map<String, Object>)entry.getValue()));
                         }
                         Log.d("----<<<<<<","--------------->>>>>>>>>>....");
+
+                        if(createRideDetailDataArrayList.size() == 0){
+                            mRVMyRides.setVisibility(View.GONE);
+                            mMessage.setVisibility(View.VISIBLE);
+                            mMessage.setText(NO_DATA_FOUND);
+                        } else {
+                            mMessage.setVisibility(View.GONE);
+                            mRVMyRides.setVisibility(View.VISIBLE);
+                        }
                         swapPosData(createRideDetailDataArrayList);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        mMessage.setVisibility(View.VISIBLE);
+                        mMessage.setText(ERROR_FETCHING);
                     }
                 });
     }
@@ -129,9 +185,12 @@ public class MyRidesActivity extends AppCompatActivity {
         mMyRidesAdapter.swapList(mCreateRideDetailData);
     }
 
-    public void updateAdapterAtIndex(CreateRideDetailData createRideDetailData, int index){
-        if(!createRideDetailData.isMember(mCurrentUser.getUid())) {
+    public void updateAdapterAtIndex(CreateRideDetailData createRideDetailData, int index, int resultIndex){
+        if(resultIndex ==  RideSummaryActivity.LEFT_CONST && !createRideDetailData.isMember(mCurrentUser.getUid())) {
             mCreateRideDetailData.remove(index);
+            mMyRidesAdapter.swapList(mCreateRideDetailData);
+        } else if(resultIndex == RideSummaryActivity.FINISH_BY_OWNER || resultIndex == RideSummaryActivity.FINISHED_RIDE_CONST){
+            mCreateRideDetailData.set(index, createRideDetailData);
             mMyRidesAdapter.swapList(mCreateRideDetailData);
         }
     }
@@ -142,13 +201,9 @@ public class MyRidesActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
             final CreateRideDetailData createRideDetailData = data.getParcelableExtra("RideUpdate");
             final int rideIndex = data.getIntExtra("RideIndex", -1);
+            final int resultIndex = data.getIntExtra("ResultCode", RideSummaryActivity.NOTHING);
             if(rideIndex != -1){
-                new Runnable(){
-                    @Override
-                    public void run() {
-                        updateAdapterAtIndex(createRideDetailData, rideIndex);
-                    }
-                }.run();
+                updateAdapterAtIndex(createRideDetailData, rideIndex, resultIndex);
             }
         }
     }

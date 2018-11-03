@@ -182,6 +182,20 @@ public class CreateRideDetailData implements Parcelable {
         return false;
     }
 
+    public boolean removeUser(String uid){
+        if(uid.equals(rideOwner.getUid())) return false;
+        if(rideUsers.size() == 1) return false;
+        for(int i = 0; i < rideUsers.size(); ++i){
+            if(uid.equals(rideUsers.get(i).getUid())){
+                rideUsers.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     public HashMap<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
         map.put(RIDE_OWNER_STRING, rideOwner.toMap());

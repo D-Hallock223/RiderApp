@@ -8,6 +8,23 @@
 
     <include layout="@layout/bottom_nav_layout" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bn_bottom_nav"
+        android:text="Fetching Data..."
+        android:textSize="24dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:id="@+id/tv_my_rides_messages"/>
+
+    <include layout="@layout/network_unavailable_try"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bn_bottom_nav"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_my_rides_cont"
         android:layout_width="match_parent"

@@ -3,8 +3,10 @@ package com.example.xhaxs.rider.AsyncTasks;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
 
 import com.example.xhaxs.rider.Activity.SearchRideActivity;
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.Datatype.PlaceData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
@@ -32,6 +34,14 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
     }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mSearchRideActivity.setRV(View.GONE);
+        mSearchRideActivity.mMessageTextView.setVisibility(View.VISIBLE);
+        mSearchRideActivity.mMessageTextView.setText(SearchRideActivity.FETCHING_RIDES);
+    }
+
+    @Override
     protected CreateRideDetailData[] doInBackground(String... strings) {
         Log.d(this.getClass().getName(), "------Getting Possible Rides----------" + strings[0]);
         return new CreateRideDetailData[0];
@@ -39,6 +49,13 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
 
     @Override
     protected void onPostExecute(CreateRideDetailData[] createRideDetailData) {
+
+        if(AppUtils.isNetworkAvailable(mSearchRideActivity.getApplicationContext()) == false){
+            mSearchRideActivity.setRV(View.GONE);
+            mSearchRideActivity.mMessageTextView.setVisibility(View.VISIBLE);
+            mSearchRideActivity.mMessageTextView.setText(AppUtils.NETWORK_ERROR);
+            return;
+        }
 
         final DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -55,6 +72,8 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
                         if(mapFrom == null){
                             Log.d(this.getClass().getName(), "______________NOTHING FOUND_____________");
                             mSearchRideActivity.swapPosData(new CreateRideDetailData[0]);
+                            mSearchRideActivity.mMessageTextView.setVisibility(View.VISIBLE);
+                            mSearchRideActivity.mMessageTextView.setText(SearchRideActivity.NO_DATA_FOUND);
                             return;
                         }
 
@@ -87,8 +106,12 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
                         }
 
                         if(createRideDetailDataArrayList != null && createRideDetailDataArrayList.size() > 0) {
+                            mSearchRideActivity.mMessageTextView.setVisibility(View.GONE);
+                            mSearchRideActivity.setRV(View.VISIBLE);
                             mSearchRideActivity.swapPosData(mCreateRideDetailData);
                         } else {
+                            mSearchRideActivity.mMessageTextView.setVisibility(View.VISIBLE);
+                            mSearchRideActivity.mMessageTextView.setText(SearchRideActivity.NO_DATA_FOUND);
                             mSearchRideActivity.swapPosData(new CreateRideDetailData[0]);
                         }
 

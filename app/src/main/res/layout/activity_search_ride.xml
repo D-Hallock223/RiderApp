@@ -49,6 +49,22 @@
         android:layout_above="@+id/bn_bottom_nav"
         android:visibility="visible" />
 
+    <TextView
+        android:id="@+id/tv_sr_messages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Fetching Rides ..."
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_below="@id/search_bar_sr"
+        android:layout_above="@+id/bn_bottom_nav"
+        android:visibility="visible" />
+
+
+
     <!--<ImageButton-->
         <!--android:id="@+id/fab_create_new_ride_sr"-->
         <!--android:layout_width="wrap_content"-->

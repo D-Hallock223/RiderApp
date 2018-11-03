@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.Datatype.PlaceData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
@@ -185,6 +186,11 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
         mSubmitRideDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(AppUtils.isNetworkAvailable(CreateRideOtherDetails.this) == false){
+                    Toast.makeText(CreateRideOtherDetails.this, AppUtils.NETWORK_ERROR, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 mCreateRideDetailData = new CreateRideDetailData(
                         new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()),

@@ -1,9 +1,11 @@
 package com.example.xhaxs.rider.Activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,11 +40,13 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RideSummaryActivity extends AppCompatActivity {
+public class  RideSummaryActivity extends AppCompatActivity {
 
-    private static final int JOINED_CONST = 1;
-    private static final int LEFT_CONST = 2;
-    private static final int FINISHED_RIDE_CONST = 3;
+    public static final int JOINED_CONST = 1;
+    public static final int LEFT_CONST = 2;
+    public static final int FINISHED_RIDE_CONST = 3;
+    public static final int FINISH_BY_OWNER = 4;
+    public static final int NOTHING = -1;
 
     private CreateRideDetailData mCreateRideDetailData;
     private CircleImageView mImageViewOwnerImage;
@@ -75,6 +79,8 @@ public class RideSummaryActivity extends AppCompatActivity {
     private SearchRideActivity mSearchRideActivity;
     private int rideIndex;
 
+    private int RESULT_CODE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +92,7 @@ public class RideSummaryActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        RESULT_CODE = NOTHING;
 
         Intent intent = getIntent();
         mSearchRideActivity = (SearchRideActivity) getParent();
@@ -153,7 +160,12 @@ public class RideSummaryActivity extends AppCompatActivity {
         mLayoutManagerJoin = new LinearLayoutManager(this);
         mRSRecyclerView.setLayoutManager(mLayoutManagerJoin);
         userSumData = mCreateRideDetailData.getRideUsers();
-        mRSAdapter = new RideUserJoinSummaryAdapter(RideSummaryActivity.this, userSumData);
+        mRSAdapter = new RideUserJoinSummaryAdapter(RideSummaryActivity.this,
+                userSumData,
+                mCreateRideDetailData.isOwner(mCurrentUser.getUid()),
+                mCreateRideDetailData.getRideOwner().getUid(),
+                mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED);
+
         mRSRecyclerView.setAdapter(mRSAdapter);
 
         mJoinButton.setOnClickListener(new View.OnClickListener() {
@@ -171,12 +183,22 @@ public class RideSummaryActivity extends AppCompatActivity {
         mLeaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean removeBool = mCreateRideDetailData.removeUser(
-                        new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail())
-                );
-                if(removeBool == true){
-                    updateDataBase("You left the ride", LEFT_CONST);
-                }
+
+                new AlertDialog.Builder(RideSummaryActivity.this)
+                        .setTitle("Leave Ride")
+                        .setMessage("Do you really want to leave this ride?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                boolean removeBool = mCreateRideDetailData.removeUser(
+                                        new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail())
+                                );
+                                if(removeBool == true){
+                                    updateDataBase("You left the ride", LEFT_CONST);
+                                }
+                            }
+                        })
+                .setNegativeButton(android.R.string.no, null).show();
             }
         });
 
@@ -201,9 +223,19 @@ public class RideSummaryActivity extends AppCompatActivity {
         mFinishRideButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mCreateRideDetailData.setRideFinished(CreateRideDetailData.RIDE_FINSISHED)) {
-                    updateDataBase("Ride Finshed", FINISHED_RIDE_CONST);
-                }
+
+                new AlertDialog.Builder(RideSummaryActivity.this)
+                        .setTitle("Finish Ride")
+                        .setMessage("Do you really want to Finish this ride?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(mCreateRideDetailData.setRideFinished(CreateRideDetailData.RIDE_FINSISHED)) {
+                                    updateDataBase("Ride Finshed", FINISHED_RIDE_CONST);
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
             }
         });
 
@@ -248,6 +280,7 @@ public class RideSummaryActivity extends AppCompatActivity {
                         mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
                     }
                     Toast.makeText(RideSummaryActivity.this, fmessage, Toast.LENGTH_SHORT).show();
+                    RESULT_CODE = type;
                     finish();
                 } else {
                     Log.d(this.getClass().getName(), "Error Updating Children");
@@ -292,6 +325,7 @@ public class RideSummaryActivity extends AppCompatActivity {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("RideUpdate", mCreateRideDetailData);
         returnIntent.putExtra("RideIndex", rideIndex);
+        returnIntent.putExtra("ResultCode", RESULT_CODE);
         setResult(RESULT_OK, returnIntent);
         super.finish();
     }
@@ -315,5 +349,23 @@ public class RideSummaryActivity extends AppCompatActivity {
             mTextViewRideFinishMessage.setVisibility(View.GONE);
             return false;
         }
+    }
+
+    public void removeUserFromList(final UserSumData userSumData){
+
+        new AlertDialog.Builder(this)
+                .setTitle("Remove User")
+                .setMessage("Do you want to remove " + userSumData.getUname() + "?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        boolean removeBool = mCreateRideDetailData.removeUser(
+                                userSumData.getUid()
+                        );
+                        if(removeBool == true){
+                            updateDataBase("User Removed!", FINISH_BY_OWNER);
+                        }
+                    }
+                }).setNegativeButton(android.R.string.no, null).show();
     }
 }

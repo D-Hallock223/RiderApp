@@ -13,10 +13,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.Adapter.SRPosAdapter;
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.AsyncTasks.RideDetailTask;
 import com.example.xhaxs.rider.CommonBottomNavigationHandle;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
@@ -43,6 +47,10 @@ public class SearchRideActivity extends AppCompatActivity {
 
     private static final String LOG_CLASS = CreateRideActivity.class.getName();
     private static final String URL_AUTO_PLACE_CONST = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
+    public static final String FETCHING_RIDES = "Fetching Rides...";
+    public static final String NO_DATA_FOUND = "No Rides Available";
+    public static final String ERROR_FETCHING = "Error Fetching Rides";
+
     private static final int REQUEST_CODE = 3;
     private final Activity activity = this;
 
@@ -50,7 +58,6 @@ public class SearchRideActivity extends AppCompatActivity {
 
     private PlaceAutocompleteFragment placeAutocompleteFragmentFrom;
     private PlaceAutocompleteFragment placeAutocompleteFragmentTo;
-
 //    private ImageButton mFabCreateNewRide;
 
     private RecyclerView mRVPossibleLocations;
@@ -58,11 +65,15 @@ public class SearchRideActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManagerPos;
 
     private ImageButton mSearchAvailRides;
+    public TextView mMessageTextView;
 
     private RideDetailTask mRideDetailTask;
     private CreateRideDetailData[] mCreateRideDetailData;
     private Place fromLocationFinal;
     private Place toLocationFinal;
+
+    private LinearLayout mNetUnAvailableLL;
+    private Button mNetTryAgainButton;
 
 
     @Override
@@ -85,7 +96,9 @@ public class SearchRideActivity extends AppCompatActivity {
             }
         });
 
+        mMessageTextView =  findViewById(R.id.tv_sr_messages);
 
+        mMessageTextView.setVisibility(View.GONE);
 //        mFabCreateNewRide = findViewById(R.id.fab_create_new_ride_sr);
 //
 //        mFabCreateNewRide.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +158,9 @@ public class SearchRideActivity extends AppCompatActivity {
         mSearchAvailRides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mMessageTextView.setVisibility(View.GONE);
+
                 if (mRideDetailTask != null) {
                     mRideDetailTask.cancel(true);
                     mRideDetailTask = null;
@@ -153,7 +169,7 @@ public class SearchRideActivity extends AppCompatActivity {
                     Toast.makeText(SearchRideActivity.this, "Error Value: from or To Location not Available", Toast.LENGTH_LONG).show();
                     return;
                 }
-                mRVPossibleLocations.setVisibility(View.GONE);
+//                mRVPossibleLocations.setVisibility(View.GONE);
                 mRideDetailTask = new RideDetailTask(SearchRideActivity.this);
                 mRideDetailTask.execute(makePosRideURL());
             }
@@ -170,7 +186,7 @@ public class SearchRideActivity extends AppCompatActivity {
     }
 
     public void swapPosData(CreateRideDetailData[] createRideDetailData) {
-        mRVPossibleLocations.setVisibility(View.VISIBLE);
+//        mRVPossibleLocations.setVisibility(View.VISIBLE);
         mCreateRideDetailData = null;
         if (createRideDetailData != null) {
             mCreateRideDetailData = createRideDetailData;
@@ -231,5 +247,9 @@ public class SearchRideActivity extends AppCompatActivity {
                 updateAdapterAtIndex(createRideDetailData, rideIndex);
             }
         }
+    }
+
+    public void setRV(int val) {
+        mRVPossibleLocations.setVisibility(val);
     }
 }
