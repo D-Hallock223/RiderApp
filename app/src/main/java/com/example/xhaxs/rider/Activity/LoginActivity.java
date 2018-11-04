@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
 
-                                Intent sendtomain = new Intent(LoginActivity.this, ProfileDetailsActivity.class);
+                                Intent sendtomain = new Intent(LoginActivity.this, SearchRideActivity.class);
                                 startActivity(sendtomain);
                                 finish();
                             } else {
