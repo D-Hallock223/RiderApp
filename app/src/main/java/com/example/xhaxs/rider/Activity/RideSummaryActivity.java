@@ -20,11 +20,9 @@ import android.widget.Toast;
 
 import com.example.xhaxs.rider.Adapter.RideUserJoinSummaryAdapter;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
-import com.example.xhaxs.rider.Datatype.PlaceData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
-import com.facebook.login.Login;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,14 +38,13 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class  RideSummaryActivity extends AppCompatActivity {
+public class RideSummaryActivity extends AppCompatActivity {
 
     public static final int JOINED_CONST = 1;
     public static final int LEFT_CONST = 2;
     public static final int FINISHED_RIDE_CONST = 3;
     public static final int FINISH_BY_OWNER = 4;
     public static final int NOTHING = -1;
-
     private CreateRideDetailData mCreateRideDetailData;
     private CircleImageView mImageViewOwnerImage;
     private TextView mTextViewOwner;
@@ -104,7 +101,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
             finish();
         }
 
-        if(intent.hasExtra("RideIndex")){
+        if (intent.hasExtra("RideIndex")) {
             rideIndex = intent.getIntExtra("RideIndex", -1);
         } else {
             finish();
@@ -129,13 +126,13 @@ public class  RideSummaryActivity extends AppCompatActivity {
         mStartRideButtons.setVisibility(View.GONE);
         mTextViewRideFinishMessage.setVisibility(View.GONE);
 
-        if(mCreateRideDetailData.isOwner(mCurrentUser.getUid())){
+        if (mCreateRideDetailData.isOwner(mCurrentUser.getUid())) {
             mJoinButton.setVisibility(View.GONE);
             mLLLeaveButton.setVisibility(View.GONE);
             checkIfTimeToStartRide();
             rideFinished();
         } else {
-            if(rideFinished() == false) {
+            if (rideFinished() == false) {
                 if (mCreateRideDetailData.isMember(mCurrentUser.getUid())) {
                     toggleVisibilty(JOINED_CONST);
                 } else {
@@ -172,9 +169,9 @@ public class  RideSummaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 boolean updateBool = mCreateRideDetailData.addUser(
-                        new UserSumData(mCurrentUser.getUid(),mCurrentUser.getDisplayName(), mCurrentUser.getEmail())
+                        new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail())
                 );
-                if(updateBool == true) {
+                if (updateBool == true) {
                     updateDataBase("You joined the ride", JOINED_CONST);
                 }
             }
@@ -193,12 +190,12 @@ public class  RideSummaryActivity extends AppCompatActivity {
                                 boolean removeBool = mCreateRideDetailData.removeUser(
                                         new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail())
                                 );
-                                if(removeBool == true){
+                                if (removeBool == true) {
                                     updateDataBase("You left the ride", LEFT_CONST);
                                 }
                             }
                         })
-                .setNegativeButton(android.R.string.no, null).show();
+                        .setNegativeButton(android.R.string.no, null).show();
             }
         });
 
@@ -212,7 +209,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
                         + Double.toString(latLng.longitude));
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, destinationIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
-                if(mapIntent.resolveActivity(getPackageManager()) != null) {
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
                     startActivity(mapIntent);
                 } else {
                     Toast.makeText(RideSummaryActivity.this, "Your Phone does not support GPS navigation", Toast.LENGTH_SHORT).show();
@@ -230,7 +227,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if(mCreateRideDetailData.setRideFinished(CreateRideDetailData.RIDE_FINSISHED)) {
+                                if (mCreateRideDetailData.setRideFinished(CreateRideDetailData.RIDE_FINSISHED)) {
                                     updateDataBase("Ride Finshed", FINISHED_RIDE_CONST);
                                 }
                             }
@@ -250,7 +247,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
                         + Double.toString(latLng.longitude));
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, destinationIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
-                if(mapIntent.resolveActivity(getPackageManager()) != null) {
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
                     startActivity(mapIntent);
                 } else {
                     Toast.makeText(RideSummaryActivity.this, "Your Phone does not support GPS navigation", Toast.LENGTH_SHORT).show();
@@ -259,7 +256,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
         });
     }
 
-    private void updateDataBase(String message, final int type){
+    private void updateDataBase(String message, final int type) {
         final String fmessage = message;
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -273,8 +270,8 @@ public class  RideSummaryActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
-                if(task.isSuccessful()) {
-                    if(type != FINISHED_RIDE_CONST) {
+                if (task.isSuccessful()) {
+                    if (type != FINISHED_RIDE_CONST) {
                         toggleVisibilty(type);
                         mRSAdapter.swapList(mCreateRideDetailData.getRideUsers());
                         mTextViewCurRiders.setText(Integer.toString(mCreateRideDetailData.getCurAccomodation()));
@@ -310,18 +307,18 @@ public class  RideSummaryActivity extends AppCompatActivity {
         }
     }
 
-    private void toggleVisibilty(int type){
-        if(type == JOINED_CONST){
+    private void toggleVisibilty(int type) {
+        if (type == JOINED_CONST) {
             mJoinButton.setVisibility(View.GONE);
             mLLLeaveButton.setVisibility(View.VISIBLE);
-        } else if(type == LEFT_CONST){
+        } else if (type == LEFT_CONST) {
             mJoinButton.setVisibility(View.VISIBLE);
             mLLLeaveButton.setVisibility(View.GONE);
         }
     }
 
     @Override
-    public void finish(){
+    public void finish() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("RideUpdate", mCreateRideDetailData);
         returnIntent.putExtra("RideIndex", rideIndex);
@@ -330,17 +327,17 @@ public class  RideSummaryActivity extends AppCompatActivity {
         super.finish();
     }
 
-    private void checkIfTimeToStartRide(){
+    private void checkIfTimeToStartRide() {
         Calendar calendar = Calendar.getInstance();
-        if(calendar.getTimeInMillis() > mCreateRideDetailData.getJourneyTime().getTimeInMillis() && mCreateRideDetailData.getRideFinished() != CreateRideDetailData.RIDE_FINSISHED){
+        if (calendar.getTimeInMillis() > mCreateRideDetailData.getJourneyTime().getTimeInMillis() && mCreateRideDetailData.getRideFinished() != CreateRideDetailData.RIDE_FINSISHED) {
             mStartRideButtons.setVisibility(View.VISIBLE);
         } else {
             mStartRideButtons.setVisibility(View.GONE);
         }
     }
 
-    private boolean rideFinished(){
-        if(mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED){
+    private boolean rideFinished() {
+        if (mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED) {
             mTextViewRideFinishMessage.setVisibility(View.VISIBLE);
             mJoinButton.setVisibility(View.GONE);
             mLLLeaveButton.setVisibility(View.GONE);
@@ -351,7 +348,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
         }
     }
 
-    public void removeUserFromList(final UserSumData userSumData){
+    public void removeUserFromList(final UserSumData userSumData) {
 
         new AlertDialog.Builder(this)
                 .setTitle("Remove User")
@@ -362,7 +359,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
                         boolean removeBool = mCreateRideDetailData.removeUser(
                                 userSumData.getUid()
                         );
-                        if(removeBool == true){
+                        if (removeBool == true) {
                             updateDataBase("User Removed!", FINISH_BY_OWNER);
                         }
                     }
