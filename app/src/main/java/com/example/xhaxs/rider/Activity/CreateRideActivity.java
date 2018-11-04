@@ -66,6 +66,7 @@ public class CreateRideActivity extends AppCompatActivity {
         toLocationFinal = null;
 
         mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         getSupportActionBar().setElevation(0);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);

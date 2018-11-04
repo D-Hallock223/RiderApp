@@ -1,7 +1,9 @@
 package com.example.xhaxs.rider.Activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -52,13 +54,20 @@ import java.util.UUID;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileDetailsActivity extends AppCompatActivity {
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    public static final String MALE_STRING = "Male";
+    public static final String FEMALE_STRING = "Female";
+    public static final String OTHER_STRING = "Other";
+
+    public static final String[] AVAILABLE_GENDERS = {MALE_STRING, FEMALE_STRING, OTHER_STRING};
 
     private CircleImageView mProfilePic;
     private EditText mUserName;
     private TextView mCountryCode;
     private EditText mPhoneNumber;
     private Button mSubmitDetails;
+    private TextView mGenderTextView;
     private FirebaseUser firebaseUser;
     private DatabaseReference mDatabase;
     private StorageReference mStorageRef,mImageRef;
@@ -69,6 +78,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
     private String userNameFinal;
     private String countryCodeFinal;
     private String phoneNumberFinal;
+    private int genderFinal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +87,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Profile Details");
 
+        mGenderTextView = findViewById(R.id.tv_submit_select_gender);
         mProfilePic = findViewById(R.id.iv_submit_profile_pic);
         mUserName = findViewById(R.id.et_sumit_profile_name);
         mCountryCode = findViewById(R.id.et_sumit_profile_country_code);
@@ -84,6 +95,26 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         mPhoneNumber = findViewById(R.id.et_sumit_profile_phone);
         mSubmitDetails = findViewById(R.id.b_submit_profile_od);
         mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        genderFinal = 0;
+
+        mGenderTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(ProfileDetailsActivity.this)
+                        .setTitle("Select Gender")
+                        .setSingleChoiceItems(AVAILABLE_GENDERS, genderFinal, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                genderFinal = which;
+                                mGenderTextView.setText(AVAILABLE_GENDERS[genderFinal]);
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
         mProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +184,11 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
                 final String countryCode = mCountryCode.getText().toString();
 
-                if (!TextUtils.isEmpty(userNameFinal) && !TextUtils.isEmpty(countryCode) && !TextUtils.isEmpty(phoneNumberFinal) && phoneNumberFinal.length()==10){
+                if (!TextUtils.isEmpty(userNameFinal) && !TextUtils.isEmpty(countryCode)
+                        && !TextUtils.isEmpty(phoneNumberFinal)
+                        && phoneNumberFinal.length()==10
+                        && (genderFinal == 0 || genderFinal == 1 || genderFinal == 2)
+                        ){
 
                     final FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -196,6 +231,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                             childUpdates.put("countryCode", countryCodeFinal);
                                             childUpdates.put("phoneNumber", phoneNumberFinal);
                                             childUpdates.put("email", currentuser.getEmail());
+                                            childUpdates.put("gender", genderFinal);
 
                                             mDatabase.updateChildren(childUpdates);
 

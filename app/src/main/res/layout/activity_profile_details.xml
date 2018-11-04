@@ -63,6 +63,17 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tv_submit_select_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Gender..."
+                android:textSize="20sp"
+                android:paddingHorizontal="8dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:paddingVertical="8dp"/>
+
             <Button
                 android:id="@+id/b_submit_profile_od"
                 android:layout_width="match_parent"

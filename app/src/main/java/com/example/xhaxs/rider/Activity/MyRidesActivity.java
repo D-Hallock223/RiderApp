@@ -67,6 +67,8 @@ public class MyRidesActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("My Rides");
 
         mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), MyRidesActivity.this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+
         mMessage = findViewById(R.id.tv_my_rides_messages);
 
         mNetworkErrorLayout = findViewById(R.id.ll_network_unavailable);

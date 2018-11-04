@@ -87,6 +87,7 @@ public class  RideSummaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ride_summary);
 
         LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 

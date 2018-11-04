@@ -40,6 +40,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     private TextView mEmail;
     private TextView mContact;
     private TextView mTotalRides;
+    private TextView mGender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +52,14 @@ public class ProfileViewActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0);
 
         mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         mProfilePic = findViewById(R.id.im_apv_profile_pic);
         mUserName = findViewById(R.id.tv_apv_u_name);
         mEmail = findViewById(R.id.tv_apv_email);
         mContact = findViewById(R.id.tv_apv_contacts);
         mTotalRides = findViewById(R.id.tv_apv_total_rides);
+        mGender = findViewById(R.id.tv_apv_gender);
 
         if(getIntent().hasExtra(PROFILER_STRING)){
             toShowUser = getIntent().getParcelableExtra(PROFILER_STRING);
@@ -70,19 +73,43 @@ public class ProfileViewActivity extends AppCompatActivity {
         mEmail.setText(toShowUser.getEmail());
         mContact.setText("-");
         mTotalRides.setText("-");
+        mGender.setText("-");
 
         if(!toShowUser.getUid().equals(mCurrentUser.getUid())){
             (findViewById(R.id.ll_apv_email)).setVisibility(View.GONE);
             (findViewById(R.id.ll_apv_contact)).setVisibility(View.GONE);
+            loadUserDetails();
         } else {
-            loadPhoneContact();
-        }
 
+            Map<String, Object> map = LogHandle.mapCache;
+
+            if(map != null){
+                Log.d("sdfsdfoksfd---", map.toString());
+            } else {
+                loadUserDetails();
+                return;
+            }
+            String cv = "";
+            String cc = "+91";
+            String gender = "-";
+
+            if(map.get("phoneNumber") != null){
+                cv = map.get("phoneNumber").toString();
+            }
+            if(map.get("countryCode") != null){
+                cc = map.get("countryCode").toString();
+            }
+            if(map.get("gender") != null){
+                gender = ProfileDetailsActivity.AVAILABLE_GENDERS[Integer.parseInt(map.get("gender").toString())];
+            }
+            mContact.setText(cc + " " + cv);
+            mGender.setText(gender);
+        }
         loadTotalRides();
 
     }
 
-    private void loadPhoneContact(){
+    private void loadUserDetails(){
         if(AppUtils.isNetworkAvailable(this) == false){
             Toast.makeText(this, "Network Not Available", Toast.LENGTH_SHORT).show();
             mContact.setText("-");
@@ -94,20 +121,27 @@ public class ProfileViewActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                            Log.d("-0-0-", "fetching for -> " + toShowUser.getUid());
                             if(map == null){
                                 mContact.setText("-");
+                                mGender.setText("-");
                                 return;
                             } else {
                                 Log.d("909090909", "-0-0-0-0-0-0-0-0-0-9230-4-" + map.toString());
                                 String cv = "";
                                 String cc = "+91";
+                                String gender = "-";
                                 if(map.get("phoneNumber") != null){
                                     cv = map.get("phoneNumber").toString();
                                 }
                                 if(map.get("countryCode") != null){
                                     cc = map.get("countryCode").toString();
                                 }
+                                if(map.get("gender") != null){
+                                    gender = ProfileDetailsActivity.AVAILABLE_GENDERS[Integer.parseInt(map.get("gender").toString())];
+                                }
                                 mContact.setText(cc + " " + cv);
+                                mGender.setText(gender);
                             }
                         }
 
