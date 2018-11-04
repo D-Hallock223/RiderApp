@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
 
-                                Intent sendtomain = new Intent(LoginActivity.this, SearchRideActivity.class);
+                                Intent sendtomain = new Intent(LoginActivity.this, ProfileDetailsActivity.class);
                                 startActivity(sendtomain);
                                 finish();
                             } else {
@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Log.d(TAG, "signInWithCredential:success");
                             // FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
-                            Intent sendtomain = new Intent(LoginActivity.this, SearchRideActivity.class);
+                            Intent sendtomain = new Intent(LoginActivity.this, ProfileDetailsActivity.class);
                             startActivity(sendtomain);
                             loginprogressbar.setVisibility(View.INVISIBLE);
                             finish();

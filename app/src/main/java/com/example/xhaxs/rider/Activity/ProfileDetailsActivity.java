@@ -18,9 +18,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,16 +61,19 @@ public class ProfileDetailsActivity extends AppCompatActivity {
     private TextView mCountryCode;
     private EditText mPhoneNumber;
     private Button mSubmitDetails;
-    private FirebaseUser firebaseUser;
+
     private DatabaseReference mDatabase;
     private StorageReference mStorageRef,mImageRef;
     private FirebaseStorage mStorage;
     private UploadTask uploadTask;
+    private ProgressDialog progressDialog;
+
 
     private Uri selectImageUri;
     private String userNameFinal;
     private String countryCodeFinal;
     private String phoneNumberFinal;
+    private String phonenumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,16 +87,18 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         mPhoneNumber = findViewById(R.id.et_sumit_profile_phone);
         mSubmitDetails = findViewById(R.id.b_submit_profile_od);
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        progressDialog = new ProgressDialog(this);
+
         mProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_IMAGE_CAPTURE);
                 }
-
             }
         });
 
@@ -107,7 +114,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(value) == false) {
                     userNameFinal = value;
                 } else {
-                    userNameFinal = "";
+                    mUserName.setError("Valid name required");
+                    mUserName.requestFocus();
+                    return;
                 }
             }
 
@@ -129,7 +138,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(value) == false && value.length() == 10) {
                     phoneNumberFinal = value;
                 } else {
-                    phoneNumberFinal = null;
+                    mPhoneNumber.setError("Valid number is required");
+                    mPhoneNumber.requestFocus();
+                    return;
                 }
             }
 
@@ -151,7 +162,10 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
                 final String countryCode = mCountryCode.getText().toString();
 
-                if (!TextUtils.isEmpty(userNameFinal) && !TextUtils.isEmpty(countryCode) && !TextUtils.isEmpty(phoneNumberFinal) && phoneNumberFinal.length()==10){
+                phonenumber = countryCode + phoneNumberFinal;
+
+                if (!TextUtils.isEmpty(userNameFinal) && !TextUtils.isEmpty(countryCode)
+                        && !TextUtils.isEmpty(phoneNumberFinal) && phoneNumberFinal.length()==10){
 
                     final FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -174,14 +188,32 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
                                         if(task.isSuccessful()) {
                                             String key = currentuser.getUid();
-    //                                        ContentResolver cR = getContentResolver();
-    //                                        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-    //
-    //                                        mStorage = FirebaseStorage.getInstance();
-    //                                        mStorageRef = mStorage.getReference();
-    //                                        mImageRef = mStorageRef.child("userImages/profilePictures/"+key+"/"
-    //                                                +UUID.randomUUID()+"."+mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
-    //                                        mImageRef.putFile(selectImageUri);
+
+                                            if(selectImageUri!=null) {
+                                                ContentResolver cR = getContentResolver();
+                                                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+
+                                                progressDialog.setMessage("Profile Picture Uploading ... ");
+                                                progressDialog.show();
+                                                mStorage = FirebaseStorage.getInstance();
+                                                mStorageRef = mStorage.getReference();
+                                                mImageRef = mStorageRef.child("userImages/profilePictures/" + key + "/"
+                                                        + selectImageUri.getLastPathSegment() + "." + mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
+                                                uploadTask = mImageRef.putFile(selectImageUri);
+                                                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                        Toast.makeText(ProfileDetailsActivity.this, "Profile Picture Uploaded", Toast.LENGTH_LONG).show();
+                                                        progressDialog.dismiss();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+
+                                                                Toast.makeText(ProfileDetailsActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                            }
 
                                             /*TODO
                                             CHECK VISIBILITY USING PROGRESSBAR;
@@ -197,7 +229,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
                                             mDatabase.updateChildren(childUpdates);
 
-                                            Intent intent = new Intent(ProfileDetailsActivity.this, SearchRideActivity.class);
+                                            Intent intent = new Intent(ProfileDetailsActivity.this, OTPActivity.class);
+                                            intent.putExtra("phonenumber", phonenumber);
                                             startActivity(intent);
                                             finish();
                                         } else {
@@ -208,7 +241,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    Toast.makeText(ProfileDetailsActivity.this, "Please provide details!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileDetailsActivity.this, "Please Upload Profile Picture /& provide details!", Toast.LENGTH_LONG).show();
                 }
             }
         });
