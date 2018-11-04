@@ -112,7 +112,7 @@
             <!-- </intent-filter> -->
         </activity>
 
-        <activity android:name=".ProfileViewActivity"
+        <activity android:name=".Activity.ProfileViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
 
         <activity android:name=".Activity.MyRidesActivity"

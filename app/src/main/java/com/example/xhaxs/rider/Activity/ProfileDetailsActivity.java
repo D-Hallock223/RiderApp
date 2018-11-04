@@ -75,6 +75,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_details);
 
+        getSupportActionBar().setTitle("Profile Details");
+
         mProfilePic = findViewById(R.id.iv_submit_profile_pic);
         mUserName = findViewById(R.id.et_sumit_profile_name);
         mCountryCode = findViewById(R.id.et_sumit_profile_country_code);

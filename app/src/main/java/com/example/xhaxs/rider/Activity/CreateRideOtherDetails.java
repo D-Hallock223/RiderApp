@@ -270,7 +270,11 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
             case R.id.menu_logout_btn:
                 LogHandle.logout(FirebaseAuth.getInstance(), this);
                 return true;
-
+            case R.id.menu_my_profile:
+                Intent intent = new Intent(this, ProfileViewActivity.class);
+                intent.putExtra(ProfileViewActivity.PROFILER_STRING, new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()));
+                startActivity(intent);
+                return true;
             default:
                 return false;
         }

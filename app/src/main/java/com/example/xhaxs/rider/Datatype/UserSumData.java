@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class UserSumData implements Parcelable {
 
-    private static final String UID_STRING = "uid";
-    private static final String UNAME_STRING = "uname";
-    private static final String EMAIL_STRING = "email";
+    public static final String UID_STRING = "uid";
+    public static final String UNAME_STRING = "uname";
+    public static final String EMAIL_STRING = "email";
 
     private String uid;
     private String uname;

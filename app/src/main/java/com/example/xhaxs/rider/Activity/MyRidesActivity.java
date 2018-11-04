@@ -25,6 +25,7 @@ import com.example.xhaxs.rider.Adapter.MyRidesAdapter;
 import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.CommonBottomNavigationHandle;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
+import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,6 +63,8 @@ public class MyRidesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_rides);
+
+        getSupportActionBar().setTitle("My Rides");
 
         mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), MyRidesActivity.this);
         mMessage = findViewById(R.id.tv_my_rides_messages);
@@ -223,7 +226,11 @@ public class MyRidesActivity extends AppCompatActivity {
             case R.id.menu_logout_btn:
                 LogHandle.logout(FirebaseAuth.getInstance(), this);
                 return true;
-
+            case R.id.menu_my_profile:
+                Intent intent = new Intent(this, ProfileViewActivity.class);
+                intent.putExtra(ProfileViewActivity.PROFILER_STRING, new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()));
+                startActivity(intent);
+                return true;
             default:
                 return false;
         }
