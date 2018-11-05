@@ -66,8 +66,6 @@ public class ProfileDetailsActivity extends AppCompatActivity {
     private StorageReference mStorageRef,mImageRef;
     private FirebaseStorage mStorage;
     private UploadTask uploadTask;
-    private ProgressDialog progressDialog;
-
 
     private Uri selectImageUri;
     private String userNameFinal;
@@ -87,7 +85,6 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         mPhoneNumber = findViewById(R.id.et_sumit_profile_phone);
         mSubmitDetails = findViewById(R.id.b_submit_profile_od);
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        progressDialog = new ProgressDialog(this);
 
         mProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,8 +111,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(value) == false) {
                     userNameFinal = value;
                 } else {
-                    mUserName.setError("Valid name required");
+                    mUserName.setError("Enter valid name");
                     mUserName.requestFocus();
+                    userNameFinal=null;
                     return;
                 }
             }
@@ -138,8 +136,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(value) == false && value.length() == 10) {
                     phoneNumberFinal = value;
                 } else {
-                    mPhoneNumber.setError("Valid number is required");
+                    mPhoneNumber.setError("Enter valid number");
                     mPhoneNumber.requestFocus();
+                    phoneNumberFinal = null;
                     return;
                 }
             }
@@ -193,8 +192,6 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                                 ContentResolver cR = getContentResolver();
                                                 MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
 
-                                                progressDialog.setMessage("Profile Picture Uploading ... ");
-                                                progressDialog.show();
                                                 mStorage = FirebaseStorage.getInstance();
                                                 mStorageRef = mStorage.getReference();
                                                 mImageRef = mStorageRef.child("userImages/profilePictures/" + key + "/"
@@ -204,7 +201,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                         Toast.makeText(ProfileDetailsActivity.this, "Profile Picture Uploaded", Toast.LENGTH_LONG).show();
-                                                        progressDialog.dismiss();
+
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                             @Override
@@ -241,7 +238,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    Toast.makeText(ProfileDetailsActivity.this, "Please Upload Profile Picture /& provide details!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileDetailsActivity.this, "Please upload profile picture & provide details!", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -254,6 +251,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
             if (null != selectImageUri) {
                 String path = getPathFromURI(selectImageUri);
                 mProfilePic.setImageURI(selectImageUri);
+            }else {
+                selectImageUri=null;
             }
         }
     }
