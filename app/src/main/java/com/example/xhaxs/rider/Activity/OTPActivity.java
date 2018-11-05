@@ -87,6 +87,7 @@ public class OTPActivity extends AppCompatActivity {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             DatabaseReference db = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid());
                             HashMap<String, Object> map = new HashMap<>();
+                            map.put(AppUtils.PHONE_VERIFIED_STRING, true);
                             map.put(AppUtils.PHONE_NUMBER_STRING, phoneNumberFinal);
                             map.put(AppUtils.COUNTRY_CODE_STRING, countryCodeFinal);
 
