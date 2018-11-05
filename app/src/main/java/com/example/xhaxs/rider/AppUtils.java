@@ -15,6 +15,7 @@ public final class AppUtils {
     public static final String EMAIL_STRING = "email";
     public static final String GENDER_STRING = "gender";
     public static final String PHONE_VERIFIED_STRING = "phoneVerified";
+    public static final String CURRENT_USER_STRING = "currentUser";
 
 
     public static final boolean isNetworkAvailable(Context context){

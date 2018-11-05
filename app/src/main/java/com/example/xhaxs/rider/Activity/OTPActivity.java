@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.AppUtils;
+import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,10 +42,17 @@ public class OTPActivity extends AppCompatActivity {
     private String countryCodeFinal;
     private String phonenumber;
 
+    private UserSumData userSumData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
+
+//        Log.d("--------------OTP", mCurrentUser.getUid());
+
+        userSumData = getIntent().getParcelableExtra(AppUtils.CURRENT_USER_STRING);
+
         mAuth = FirebaseAuth.getInstance();
         verifyProgressBar = findViewById(R.id.verifyProgressBar);
         editText = findViewById(R.id.editTextCode);
@@ -74,7 +82,36 @@ public class OTPActivity extends AppCompatActivity {
     }
     private void verifyCode(String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationid, code);
-        signInWithCredential(credential);
+//        signInWithCredential(credential);
+        uploadToDatabase();
+    }
+
+    private void uploadToDatabase(){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Users/" + userSumData.getUid());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(AppUtils.PHONE_VERIFIED_STRING, true);
+        map.put(AppUtils.PHONE_NUMBER_STRING, phoneNumberFinal);
+        map.put(AppUtils.COUNTRY_CODE_STRING, countryCodeFinal);
+
+        db.updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    verifyProgressBar.setVisibility(View.INVISIBLE);
+
+                    LogHandle.flushCache();
+
+                    Intent intent = new Intent(OTPActivity.this, SearchRideActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(OTPActivity.this, "Error Updating", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(OTPActivity.this, PhoneNumberActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
     }
 
     private void signInWithCredential(PhoneAuthCredential credential) {
@@ -84,33 +121,32 @@ public class OTPActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid());
-                            HashMap<String, Object> map = new HashMap<>();
-                            map.put(AppUtils.PHONE_VERIFIED_STRING, true);
-                            map.put(AppUtils.PHONE_NUMBER_STRING, phoneNumberFinal);
-                            map.put(AppUtils.COUNTRY_CODE_STRING, countryCodeFinal);
-
-                            db.updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        verifyProgressBar.setVisibility(View.INVISIBLE);
-
-                                        LogHandle.flushCache();
-
-                                        Intent intent = new Intent(OTPActivity.this, SearchRideActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
-                                    } else {
-                                        Toast.makeText(OTPActivity.this, "Error Updating", Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent(OTPActivity.this, PhoneNumberActivity.class);
-                                        startActivity(intent);
-                                        finish();
-
-                                    }
-                                }
-                            });
+//                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Users/" + userSumData.getUid());
+//                            HashMap<String, Object> map = new HashMap<>();
+//                            map.put(AppUtils.PHONE_VERIFIED_STRING, true);
+//                            map.put(AppUtils.PHONE_NUMBER_STRING, phoneNumberFinal);
+//                            map.put(AppUtils.COUNTRY_CODE_STRING, countryCodeFinal);
+//
+//                            db.updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if(task.isSuccessful()){
+//                                        verifyProgressBar.setVisibility(View.INVISIBLE);
+//
+//                                        LogHandle.flushCache();
+//
+//                                        Intent intent = new Intent(OTPActivity.this, SearchRideActivity.class);
+//                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                        startActivity(intent);
+//                                    } else {
+//                                        Toast.makeText(OTPActivity.this, "Error Updating", Toast.LENGTH_LONG).show();
+//                                        Intent intent = new Intent(OTPActivity.this, PhoneNumberActivity.class);
+//                                        startActivity(intent);
+//                                        finish();
+//
+//                                    }
+//                                }
+//                            });
 
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {

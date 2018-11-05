@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.AppUtils;
+import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -83,6 +84,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_details);
 
         getSupportActionBar().setTitle("Profile Details");
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         mGenderTextView = findViewById(R.id.tv_submit_select_gender);
         mProfilePic = findViewById(R.id.iv_submit_profile_pic);
@@ -219,11 +222,21 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                             childUpdates.put(AppUtils.GENDER_STRING, genderFinal);
                                             childUpdates.put(AppUtils.PHONE_VERIFIED_STRING, false);
 
-                                            mDatabase.updateChildren(childUpdates);
+                                            mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
 
-                                            Intent intent = new Intent(ProfileDetailsActivity.this, PhoneNumberActivity.class);
-                                            startActivity(intent);
-                                            finish();
+                                                        Intent intent = new Intent(ProfileDetailsActivity.this, PhoneNumberActivity.class);
+                                                        intent.putExtra(AppUtils.CURRENT_USER_STRING,
+                                                                new UserSumData(firebaseUser.getUid(), userNameFinal, firebaseUser.getEmail())
+                                                        );
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                }
+                                            });
+
                                         } else {
                                             Toast.makeText(ProfileDetailsActivity.this, "Error Saving Data!", Toast.LENGTH_SHORT).show();
                                         }

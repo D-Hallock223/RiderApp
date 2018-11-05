@@ -15,6 +15,7 @@ import com.example.xhaxs.rider.Activity.LoginActivity;
 import com.example.xhaxs.rider.Activity.PhoneNumberActivity;
 import com.example.xhaxs.rider.Activity.ProfileDetailsActivity;
 import com.example.xhaxs.rider.Activity.SearchRideActivity;
+import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,7 +44,7 @@ public final class LogHandle {
         return currentUser;
     }
 
-    public static void checkDetailsAdded(FirebaseUser firebaseUser, final Activity activity){
+    public static void checkDetailsAdded(final FirebaseUser firebaseUser, final Activity activity){
 
         spinner = (ProgressBar) activity.findViewById(R.id.progress_bar_login_done);
         if(spinner != null) spinner.setVisibility(View.VISIBLE);
@@ -51,7 +52,7 @@ public final class LogHandle {
         Log.d("-23-23-23", "Got details for log handle!-23-234-234-234-234-24");
 
         if(mapCache != null){
-            checkPhoneAuth(activity);
+            checkPhoneAuth(firebaseUser, activity);
             return;
         }
 
@@ -72,8 +73,7 @@ public final class LogHandle {
                     if(mapCache != null){
                         Log.d("------", "Map Cache set=> " + mapCache.toString());
 
-                        checkPhoneAuth(activity);
-
+                        checkPhoneAuth(firebaseUser, activity);
                     }
                     return;
                 }
@@ -101,12 +101,17 @@ public final class LogHandle {
         mapCache = null;
     }
 
-    public static void checkPhoneAuth(Activity activity){
+    public static void checkPhoneAuth(FirebaseUser firebaseUser, Activity activity){
 
         if(mapCache.get(AppUtils.PHONE_VERIFIED_STRING) == null ||
                 ( mapCache.get(AppUtils.PHONE_VERIFIED_STRING) != null && mapCache.get(AppUtils.PHONE_VERIFIED_STRING).toString().equals("false"))){
 
             Intent intent = new Intent(activity.getApplicationContext(), PhoneNumberActivity.class);
+            intent.putExtra(AppUtils.CURRENT_USER_STRING, new UserSumData(
+                    firebaseUser.getUid(),
+                    firebaseUser.getDisplayName(),
+                    firebaseUser.getEmail())
+            );
             activity.startActivity(intent);
             activity.finish();
         }

@@ -71,6 +71,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
         LogHandle.checkDetailsAdded(mCurrentUser, this);
 
+        Log.d("--------------PROFILE", mCurrentUser.getUid());
+
         mProfilePic = findViewById(R.id.im_apv_profile_pic);
         mUserName = findViewById(R.id.tv_apv_u_name);
         mEmail = findViewById(R.id.tv_apv_email);

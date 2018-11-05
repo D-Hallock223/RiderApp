@@ -6,12 +6,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.xhaxs.rider.AppUtils;
+import com.example.xhaxs.rider.Datatype.UserSumData;
+import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class PhoneNumberActivity extends AppCompatActivity {
 
@@ -24,11 +30,14 @@ public class PhoneNumberActivity extends AppCompatActivity {
     private String phonenumber;
 
     private Button mSendOTPButton;
+    private UserSumData userSumData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_number);
+
+        userSumData = getIntent().getParcelableExtra(AppUtils.CURRENT_USER_STRING);
 
         mCountryCode = findViewById(R.id.et_sumit_profile_country_code);
         countryCodeFinal = mCountryCode.getText().toString();
@@ -69,6 +78,7 @@ public class PhoneNumberActivity extends AppCompatActivity {
                     Intent intent = new Intent(PhoneNumberActivity.this, OTPActivity.class);
                     intent.putExtra("phoneNumberFinal", phoneNumberFinal);
                     intent.putExtra("countryCodeFinal", countryCodeFinal);
+                    intent.putExtra(AppUtils.CURRENT_USER_STRING, userSumData);
                     startActivity(intent);
                     finish();
                 }
