@@ -13,12 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary"
+        android:background="@color/greenDark"
         android:elevation="1dp"
         android:orientation="horizontal"
         android:translationZ="8dp">
 
-        <include layout="@layout/search_autocomplete_frag"/>
+        <include layout="@layout/search_autocomplete_frag" />
 
     </LinearLayout>
 
@@ -29,8 +29,8 @@
         android:layout_above="@+id/bn_bottom_nav"
         android:layout_marginHorizontal="24dp"
         android:layout_marginVertical="16dp"
-        android:background="@drawable/next_button_paint"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:background="@drawable/green_button"
+        android:backgroundTint="@color/greenDark"
         android:paddingVertical="12dp"
         android:text="Next"
         android:textColor="@android:color/white"

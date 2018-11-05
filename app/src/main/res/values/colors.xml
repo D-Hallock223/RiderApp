@@ -6,4 +6,7 @@
     <color name="colorAccent">#F44336</color>
     <color name="white">#ffffff</color>
     <color name="facebook">#5240AF</color>
+    <color name="green">#d9e231</color>
+    <color name="greenDark">#024b30</color>
+
 </resources>

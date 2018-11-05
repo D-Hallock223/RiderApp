@@ -29,7 +29,7 @@
             android:maxLines="1"
             android:paddingHorizontal="4dp"
             android:text="@string/from_location"
-            android:textColor="@android:color/black"
+            android:textColor="@color/greenDark"
             android:textSize="16sp" />
 
         <TextView
@@ -48,7 +48,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/greenDark"
         android:src="@drawable/add_fab" />
 
 </LinearLayout>

@@ -1,15 +1,11 @@
 package com.example.xhaxs.rider.Activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.xhaxs.rider.Adapter.MyRidesAdapter;
 import com.example.xhaxs.rider.AppUtils;
@@ -44,18 +39,14 @@ public class MyRidesActivity extends AppCompatActivity {
     private static final String NO_DATA_FOUND = "No Rides Found";
     private static final String FETCHING_DATA = "Fetching Rides...";
     private static final String ERROR_FETCHING = "Error Fetching Data!";
-
+    ArrayList<CreateRideDetailData> mCreateRideDetailData;
     private TextView mMessage;
-
     private LinearLayout mNetworkErrorLayout;
     private Button mNetTryAgainButton;
-
     private BottomNavigationView mBottomNavigationView;
     private RecyclerView mRVMyRides;
     private MyRidesAdapter mMyRidesAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    ArrayList<CreateRideDetailData> mCreateRideDetailData;
-
     private FirebaseUser mCurrentUser;
 
     @Override
@@ -92,7 +83,7 @@ public class MyRidesActivity extends AppCompatActivity {
         mMyRidesAdapter = new MyRidesAdapter(MyRidesActivity.this, mCreateRideDetailData);
         mRVMyRides.setAdapter(mMyRidesAdapter);
 
-        if(mCreateRideDetailData == null){
+        if (mCreateRideDetailData == null) {
             mNetworkErrorLayout.setVisibility(View.GONE);
             mRVMyRides.setVisibility(View.GONE);
             mMessage.setVisibility(View.VISIBLE);
@@ -109,14 +100,14 @@ public class MyRidesActivity extends AppCompatActivity {
         loadMyData();
     }
 
-    private void loadMyData(){
+    private void loadMyData() {
 
         mRVMyRides.setVisibility(View.GONE);
         mNetworkErrorLayout.setVisibility(View.GONE);
         mMessage.setVisibility(View.VISIBLE);
         mMessage.setText(FETCHING_DATA);
 
-        if(AppUtils.isNetworkAvailable(this) == false){
+        if (AppUtils.isNetworkAvailable(this) == false) {
             mMessage.setVisibility(View.GONE);
 //            mMessage.setText(AppUtils.NETWORK_ERROR);
             mNetworkErrorLayout.setVisibility(View.VISIBLE);
@@ -131,8 +122,8 @@ public class MyRidesActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                        Log.d("MYRIDES----<<<<<<","Recieved Following Data For User --> " + mCurrentUser.getUid());
-                        if(map == null) {
+                        Log.d("MYRIDES----<<<<<<", "Recieved Following Data For User --> " + mCurrentUser.getUid());
+                        if (map == null) {
                             mMessage.setVisibility(View.VISIBLE);
                             mMessage.setText(NO_DATA_FOUND);
                             return;
@@ -146,11 +137,11 @@ public class MyRidesActivity extends AppCompatActivity {
                                     ride.toString()
                             );
 
-                            createRideDetailDataArrayList.add(new CreateRideDetailData(entry.getKey(), (Map<String, Object>)entry.getValue()));
+                            createRideDetailDataArrayList.add(new CreateRideDetailData(entry.getKey(), (Map<String, Object>) entry.getValue()));
                         }
-                        Log.d("----<<<<<<","--------------->>>>>>>>>>....");
+                        Log.d("----<<<<<<", "--------------->>>>>>>>>>....");
 
-                        if(createRideDetailDataArrayList.size() == 0){
+                        if (createRideDetailDataArrayList.size() == 0) {
                             mRVMyRides.setVisibility(View.GONE);
                             mMessage.setVisibility(View.VISIBLE);
                             mMessage.setText(NO_DATA_FOUND);
@@ -170,10 +161,10 @@ public class MyRidesActivity extends AppCompatActivity {
     }
 
     public void showDetails(CreateRideDetailData createRideDetailData, int index) {
-        Toast.makeText(MyRidesActivity.this, "Called Show Details", Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(MyRidesActivity.this, "Called Show Details", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, RideSummaryActivity.class);
         intent.putExtra("RideDetail", createRideDetailData);
-        intent.putExtra("RideIndex",  index);
+        intent.putExtra("RideIndex", index);
         startActivityForResult(intent, REQUEST_CODE);
     }
 
@@ -185,11 +176,11 @@ public class MyRidesActivity extends AppCompatActivity {
         mMyRidesAdapter.swapList(mCreateRideDetailData);
     }
 
-    public void updateAdapterAtIndex(CreateRideDetailData createRideDetailData, int index, int resultIndex){
-        if(resultIndex ==  RideSummaryActivity.LEFT_CONST && !createRideDetailData.isMember(mCurrentUser.getUid())) {
+    public void updateAdapterAtIndex(CreateRideDetailData createRideDetailData, int index, int resultIndex) {
+        if (resultIndex == RideSummaryActivity.LEFT_CONST && !createRideDetailData.isMember(mCurrentUser.getUid())) {
             mCreateRideDetailData.remove(index);
             mMyRidesAdapter.swapList(mCreateRideDetailData);
-        } else if(resultIndex == RideSummaryActivity.FINISH_BY_OWNER || resultIndex == RideSummaryActivity.FINISHED_RIDE_CONST){
+        } else if (resultIndex == RideSummaryActivity.FINISH_BY_OWNER || resultIndex == RideSummaryActivity.FINISHED_RIDE_CONST) {
             mCreateRideDetailData.set(index, createRideDetailData);
             mMyRidesAdapter.swapList(mCreateRideDetailData);
         }
@@ -198,11 +189,11 @@ public class MyRidesActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE && resultCode == RESULT_OK){
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             final CreateRideDetailData createRideDetailData = data.getParcelableExtra("RideUpdate");
             final int rideIndex = data.getIntExtra("RideIndex", -1);
             final int resultIndex = data.getIntExtra("ResultCode", RideSummaryActivity.NOTHING);
-            if(rideIndex != -1){
+            if (rideIndex != -1) {
                 updateAdapterAtIndex(createRideDetailData, rideIndex, resultIndex);
             }
         }

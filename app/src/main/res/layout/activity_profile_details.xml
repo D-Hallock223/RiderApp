@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.ProfileDetailsActivity"
-    android:paddingBottom="24dp">
+    android:paddingBottom="24dp"
+    tools:context=".Activity.ProfileDetailsActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -48,8 +48,7 @@
                     android:gravity="center"
                     android:text="+91"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="20sp"
-                    />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/et_sumit_profile_phone"
