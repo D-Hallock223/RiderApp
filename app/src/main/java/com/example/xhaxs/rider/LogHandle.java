@@ -100,8 +100,9 @@ public final class LogHandle {
     }
 
     public static void checkPhoneAuth(Activity activity){
-        if(mapCache.get("phoneVerfied") == null ||
-                ( mapCache.get("phoneVerfied") != null && Boolean.parseBoolean(mapCache.get("phoneVerified").toString()) == false)){
+
+        if(mapCache.get(AppUtils.PHONE_VERIFIED_STRING) == null ||
+                ( mapCache.get(AppUtils.PHONE_VERIFIED_STRING) != null && mapCache.get(AppUtils.PHONE_VERIFIED_STRING).toString().equals("false"))){
 
             Intent intent = new Intent(activity.getApplicationContext(), PhoneNumberActivity.class);
             activity.startActivity(intent);

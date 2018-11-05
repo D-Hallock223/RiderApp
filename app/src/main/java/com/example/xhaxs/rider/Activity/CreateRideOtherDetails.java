@@ -93,9 +93,9 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
-//
-//        LogHandle.checkDetailsAdded(mCurrentUser, this);
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
 
         Intent intent = getIntent();

@@ -71,8 +71,8 @@ public class MyRidesActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("My Rides");
 
-//        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), MyRidesActivity.this);
-//        LogHandle.checkDetailsAdded(mCurrentUser, this);
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), MyRidesActivity.this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         mMessage = findViewById(R.id.tv_my_rides_messages);
 

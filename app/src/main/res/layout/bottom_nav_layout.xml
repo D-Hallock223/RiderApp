@@ -7,7 +7,10 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:layout_alignParentBottom="true"
-    android:background="@color/greenDark"
+    android:background="@color/colorPrimary"
     android:elevation="1dp"
     android:translationZ="8dp"
+    app:itemBackground="@color/colorPrimary"
+    app:itemIconTint="@drawable/bottom_nav_selector"
+    app:itemTextColor="@drawable/bottom_nav_selector"
     app:menu="@menu/bottom_nav_menu" />

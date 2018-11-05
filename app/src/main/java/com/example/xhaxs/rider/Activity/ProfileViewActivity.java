@@ -61,12 +61,15 @@ public class ProfileViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
 
+//        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+//        LogHandle.checkDetailsAdded(mCurrentUser, this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Profile");
         getSupportActionBar().setElevation(0);
 
-//        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
-//        LogHandle.checkDetailsAdded(mCurrentUser, this);
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         mProfilePic = findViewById(R.id.im_apv_profile_pic);
         mUserName = findViewById(R.id.tv_apv_u_name);

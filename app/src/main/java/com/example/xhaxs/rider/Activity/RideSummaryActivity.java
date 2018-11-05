@@ -97,10 +97,8 @@ public class RideSummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_summary);
 
-//        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
-//        LogHandle.checkDetailsAdded(mCurrentUser, this);
-//
-//        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
