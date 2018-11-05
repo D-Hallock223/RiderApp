@@ -47,9 +47,10 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     public static final String FINAL_MAX_COUNT_DISPLAY = "MAX_COUNT_DISPLAY";
+
     int day, month, year, hour, minute;
     int dayFinal, monthFinal, yearFinal, hourFinal, minuteFinal;
-    private FirebaseUser firebaseUser;
+
     private ImageButton mpick;
     private TextView mDisplay;
     private TextView mIncMaxCount;
@@ -78,9 +79,10 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
 
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+
 
         Intent intent = getIntent();
 
@@ -270,7 +272,11 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
             case R.id.menu_logout_btn:
                 LogHandle.logout(FirebaseAuth.getInstance(), this);
                 return true;
-
+            case R.id.menu_my_profile:
+                Intent intent = new Intent(this, ProfileViewActivity.class);
+                intent.putExtra(ProfileViewActivity.PROFILER_STRING, new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()));
+                startActivity(intent);
+                return true;
             default:
                 return false;
         }

@@ -84,6 +84,7 @@ public class RideSummaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ride_summary);
 
         LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -301,7 +302,15 @@ public class RideSummaryActivity extends AppCompatActivity {
             case R.id.menu_logout_btn:
                 LogHandle.logout(FirebaseAuth.getInstance(), this);
                 return true;
-
+            case R.id.menu_my_profile:
+                Intent intent = new Intent(this, ProfileViewActivity.class);
+                intent.putExtra(ProfileViewActivity.PROFILER_STRING,
+                        new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()));
+                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return false;
         }

@@ -24,6 +24,7 @@ import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.AsyncTasks.RideDetailTask;
 import com.example.xhaxs.rider.CommonBottomNavigationHandle;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
+import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.facebook.login.LoginManager;
@@ -75,6 +76,8 @@ public class SearchRideActivity extends AppCompatActivity {
     private LinearLayout mNetUnAvailableLL;
     private Button mNetTryAgainButton;
 
+    private FirebaseUser mCurrentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,10 @@ public class SearchRideActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setTitle("Search Available Rides");
 
-        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+
+
 
         mBottomNavigationView = findViewById(R.id.bn_bottom_nav);
         mBottomNavigationView.setSelectedItemId(R.id.mi_search_ride);
@@ -231,7 +237,11 @@ public class SearchRideActivity extends AppCompatActivity {
             case R.id.menu_logout_btn:
                 LogHandle.logout(FirebaseAuth.getInstance(), this);
                 return true;
-
+            case R.id.menu_my_profile:
+                Intent intent = new Intent(this, ProfileViewActivity.class);
+                intent.putExtra(ProfileViewActivity.PROFILER_STRING, new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()));
+                startActivity(intent);
+                return true;
             default:
                 return false;
         }

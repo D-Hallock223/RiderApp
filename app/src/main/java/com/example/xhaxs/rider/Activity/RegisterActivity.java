@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         regloginbutton = findViewById(R.id.regloginbutton);
         regpassword2 = findViewById(R.id.regpassword2);
         mAuth = FirebaseAuth.getInstance();
-
+        mAuth.setLanguageCode("fr");
         regloginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

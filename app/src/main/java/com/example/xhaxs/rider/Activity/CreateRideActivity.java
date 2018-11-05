@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.CommonBottomNavigationHandle;
+import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.common.api.Status;
@@ -22,6 +23,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,6 +32,8 @@ public class CreateRideActivity extends AppCompatActivity {
     private static final String LOG_CLASS = CreateRideActivity.class.getName();
     private static final String URL_AUTO_PLACE_CONST = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
     private final Activity activity = this;
+
+    private FirebaseUser mCurrentUser;
 
     private Button mNextButton;
     private BottomNavigationView mBottomNavigationView;
@@ -61,7 +65,8 @@ public class CreateRideActivity extends AppCompatActivity {
         fromLocationFinal = null;
         toLocationFinal = null;
 
-        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         getSupportActionBar().setElevation(0);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -141,7 +146,11 @@ public class CreateRideActivity extends AppCompatActivity {
             case R.id.menu_logout_btn:
                 LogHandle.logout(FirebaseAuth.getInstance(), this);
                 return true;
-
+            case R.id.menu_my_profile:
+                Intent intent = new Intent(this, ProfileViewActivity.class);
+                intent.putExtra(ProfileViewActivity.PROFILER_STRING, new UserSumData(mCurrentUser.getUid(), mCurrentUser.getDisplayName(), mCurrentUser.getEmail()));
+                startActivity(intent);
+                return true;
             default:
                 return false;
         }

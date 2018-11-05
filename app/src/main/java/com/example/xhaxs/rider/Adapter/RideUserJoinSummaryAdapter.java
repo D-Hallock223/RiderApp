@@ -1,5 +1,6 @@
 package com.example.xhaxs.rider.Adapter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.xhaxs.rider.Activity.ProfileViewActivity;
 import com.example.xhaxs.rider.Activity.RideSummaryActivity;
 import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.R;
@@ -73,6 +75,15 @@ public class RideUserJoinSummaryAdapter extends RecyclerView.Adapter<RideUserJoi
         } else {
             userJoinVH.clearButton.setVisibility(View.GONE);
         }
+
+        userJoinVH.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mRideSummaryActivity.getApplicationContext(), ProfileViewActivity.class);
+                intent.putExtra(ProfileViewActivity.PROFILER_STRING, userSumData.get(index));
+                mRideSummaryActivity.startActivity(intent);
+            }
+        });
     }
 
     @Override

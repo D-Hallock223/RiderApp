@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.PhoneNumberActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter your Contact"
+        android:gravity="center"
+        android:paddingVertical="24dp"
+        android:textAllCaps="true"
+        android:textSize="16dp"
+        android:textColor="@color/colorAccent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal"
+            android:layout_gravity="top">
+
+            <TextView
+                android:id="@+id/et_sumit_profile_country_code"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="+91"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="20sp"
+                />
+
+            <EditText
+                android:id="@+id/et_sumit_profile_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:maxLength="10"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next"
+            android:id="@+id/b_apn_send_otp"
+            android:background="@drawable/next_button_paint"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="24dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
