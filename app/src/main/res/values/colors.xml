@@ -11,4 +11,6 @@
     <color name="colorPrimaryLight">@color/greenLight</color>
     <color name="colorAccent">#F44336</color>
 
+    <color name="colorLimeGreen">#d9e231</color>
+
 </resources>
