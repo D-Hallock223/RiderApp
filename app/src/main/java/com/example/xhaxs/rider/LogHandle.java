@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.Activity.LoginActivity;
@@ -28,6 +31,7 @@ import javax.crypto.interfaces.PBEKey;
 public final class LogHandle {
 
      public static Map<String, Object> mapCache = null;
+     public static ProgressBar spinner;
 
     public static FirebaseUser checkLogin(FirebaseAuth firebaseAuth, Activity activity){
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -40,6 +44,9 @@ public final class LogHandle {
     }
 
     public static void checkDetailsAdded(FirebaseUser firebaseUser, final Activity activity){
+
+        spinner = (ProgressBar) activity.findViewById(R.id.progress_bar_login_done);
+        if(spinner != null) spinner.setVisibility(View.VISIBLE);
 
         if(mapCache != null){
             checkPhoneAuth(activity);
@@ -99,7 +106,9 @@ public final class LogHandle {
             Intent intent = new Intent(activity.getApplicationContext(), PhoneNumberActivity.class);
             activity.startActivity(intent);
             activity.finish();
-
         }
+
+        if(spinner != null)
+            spinner.setVisibility(View.GONE);
     }
 }

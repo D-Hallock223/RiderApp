@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".Activity.ProfileViewActivity">
 
+    <include layout="@layout/check_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
 
     <ImageView
         android:layout_width="match_parent"

@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".Activity.SearchRideActivity">
 
+    <include layout="@layout/check_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
     <include layout="@layout/bottom_nav_layout" />
 
     <LinearLayout
@@ -14,7 +19,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="0dp"
-        android:background="@color/greenDark"
+        android:background="@color/colorPrimary"
         android:elevation="1dp"
         android:orientation="horizontal"
         android:paddingBottom="16dp"

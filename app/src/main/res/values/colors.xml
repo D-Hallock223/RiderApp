@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2196F3</color>
-    <color name="colorPrimaryDark">#0069c0</color>
-    <color name="colorPrimaryLight">#4dabf5</color>
-    <color name="colorAccent">#F44336</color>
     <color name="white">#ffffff</color>
     <color name="facebook">#5240AF</color>
-    <color name="green">#d9e231</color>
-    <color name="greenDark">#024b30</color>
+    <color name="green">#024b30</color>
+    <color name="greenDark">#002308</color>
+    <color name="greenLight">#387759</color>
+
+    <color name="colorPrimary">@color/green</color>
+    <color name="colorPrimaryDark">@color/greenDark</color>
+    <color name="colorPrimaryLight">@color/greenLight</color>
+    <color name="colorAccent">#F44336</color>
 
 </resources>

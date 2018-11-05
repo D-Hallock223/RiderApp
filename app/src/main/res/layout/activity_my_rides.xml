@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".Activity.MyRidesActivity">
 
+    <include layout="@layout/check_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
     <include layout="@layout/bottom_nav_layout" />
 
     <TextView
