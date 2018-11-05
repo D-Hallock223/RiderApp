@@ -18,18 +18,23 @@
         android:maxLength="6"
         android:textSize="20sp"
         android:inputType="textMultiLine"/>
+
     <Button
         android:id="@+id/buttonVerify"
-        android:layout_width="227dp"
-        android:layout_height="47dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="82dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/next_button_paint"
+        android:backgroundTint="@color/colorAccent"
         android:text="Verify Account"
         android:textColor="@color/white"
+        android:paddingVertical="20dp"
+        android:paddingHorizontal="20dp"
         android:textSize="20sp"
         android:textStyle="bold"/>
+
     <ProgressBar
         android:id="@+id/verifyProgressBar"
         style="?android:attr/progressBarStyle"

@@ -61,11 +61,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.OTPActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".Activity.CreateRideActivity"
@@ -86,7 +88,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.xhaxs.rider.Activity.CreateRideActivity" />
         </activity>
-
         <activity
             android:name=".Activity.SearchRideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
@@ -116,16 +117,17 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-
-        <activity android:name=".Activity.ProfileViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-
-        <activity android:name=".Activity.MyRidesActivity"
+        <activity
+            android:name=".Activity.ProfileViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".Activity.MyRidesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".Activity.OTPActivity"></activity>
+        <activity
+            android:name=".Activity.MyRidesActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".Activity.OTPActivity" />
+        <activity android:name=".Activity.PhoneNumberActivity"></activity>
     </application>
 
 </manifest>

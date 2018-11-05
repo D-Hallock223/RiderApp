@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,14 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser currentuser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentuser == null) {
-            // user is not logged in
-            // send him to login page
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
-        }
+        LogHandle.checkLogin(FirebaseAuth.getInstance(), MainActivity.this);
     }
 
     @Override
@@ -56,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.menu_logout_btn:
-                logout();
+                LogHandle.logout(FirebaseAuth.getInstance(), this);
                 return true;
 
             default:

@@ -1,5 +1,6 @@
 package com.example.xhaxs.rider;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.Activity.LoginActivity;
+import com.example.xhaxs.rider.Activity.PhoneNumberActivity;
 import com.example.xhaxs.rider.Activity.ProfileDetailsActivity;
 import com.example.xhaxs.rider.Activity.SearchRideActivity;
 import com.facebook.login.LoginManager;
@@ -57,6 +59,9 @@ public final class LogHandle {
                     mapCache = map;
                     if(mapCache != null){
                         Log.d("------", "Map Cache set=> " + mapCache.toString());
+
+                        checkPhoneAuth(activity);
+
                     }
                     return;
                 }
@@ -79,7 +84,19 @@ public final class LogHandle {
 
     }
 
+
     public static void flushCache(){
         mapCache = null;
+    }
+
+    public static void checkPhoneAuth(Activity activity){
+        if(mapCache.get("phoneVerfied") == null ||
+                ( mapCache.get("phoneVerfied") != null && Boolean.parseBoolean(mapCache.get("phoneVerified").toString()) == false)){
+
+            Intent intent = new Intent(activity.getApplicationContext(), PhoneNumberActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
+
+        }
     }
 }

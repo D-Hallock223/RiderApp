@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -66,8 +67,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
     private CircleImageView mProfilePic;
     private EditText mUserName;
-    private TextView mCountryCode;
-    private EditText mPhoneNumber;
+//    private TextView mCountryCode;
+//    private EditText mPhoneNumber;
     private Button mSubmitDetails;
 
     private TextView mGenderTextView;
@@ -80,8 +81,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
     private Uri selectImageUri;
     private String userNameFinal;
-    private String countryCodeFinal;
-    private String phoneNumberFinal;
+//    private String countryCodeFinal;
+//    private String phoneNumberFinal;
 
     private int genderFinal;
 
@@ -97,9 +98,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         mGenderTextView = findViewById(R.id.tv_submit_select_gender);
         mProfilePic = findViewById(R.id.iv_submit_profile_pic);
         mUserName = findViewById(R.id.et_sumit_profile_name);
-        mCountryCode = findViewById(R.id.et_sumit_profile_country_code);
-        countryCodeFinal = mCountryCode.getText().toString();
-        mPhoneNumber = findViewById(R.id.et_sumit_profile_phone);
+//        mCountryCode = findViewById(R.id.et_sumit_profile_country_code);
+//        countryCodeFinal = mCountryCode.getText().toString();
+//        mPhoneNumber = findViewById(R.id.et_sumit_profile_phone);
         mSubmitDetails = findViewById(R.id.b_submit_profile_od);
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -160,30 +161,30 @@ public class ProfileDetailsActivity extends AppCompatActivity {
             }
         });
 
-        mPhoneNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String value = s.toString();
-                if (TextUtils.isEmpty(value) == false && value.length() == 10) {
-                    phoneNumberFinal = value;
-                } else {
-                    mPhoneNumber.setError("Enter valid number");
-                    mPhoneNumber.requestFocus();
-                    phoneNumberFinal = null;
-                    return;
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+////        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+////            @Override
+////            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+////
+////            }
+////
+////            @Override
+////            public void onTextChanged(CharSequence s, int start, int before, int count) {
+////                String value = s.toString();
+////                if (TextUtils.isEmpty(value) == false && value.length() == 10) {
+////                    phoneNumberFinal = value;
+////                } else {
+////                    mPhoneNumber.setError("Enter valid number");
+////                    mPhoneNumber.requestFocus();
+////                    phoneNumberFinal = null;
+////                    return;
+////                }
+////            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
 
 
         mSubmitDetails.setOnClickListener(new View.OnClickListener() {
@@ -195,13 +196,13 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                  * 2. Check the details verification for phone contact, country Code.
                  */
 
-                final String countryCode = mCountryCode.getText().toString();
+//                final String countryCode = mCountryCode.getText().toString();
 
-                phonenumber = countryCode + phoneNumberFinal;
+//                phonenumber = countryCode + phoneNumberFinal;
                 
-                if (!TextUtils.isEmpty(userNameFinal) && !TextUtils.isEmpty(countryCode)
-                        && !TextUtils.isEmpty(phoneNumberFinal)
-                        && phoneNumberFinal.length()==10
+                if (!TextUtils.isEmpty(userNameFinal) // && !TextUtils.isEmpty(countryCode)
+//                        && !TextUtils.isEmpty(phoneNumberFinal)
+//                        && phoneNumberFinal.length()==10
                         && (genderFinal == 0 || genderFinal == 1 || genderFinal == 2)
                         ){
 
@@ -228,29 +229,29 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                         if(task.isSuccessful()) {
                                             String key = currentuser.getUid();
 
-                                            if(selectImageUri!=null) {
-                                                ContentResolver cR = getContentResolver();
-                                                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-
-                                                mStorage = FirebaseStorage.getInstance();
-                                                mStorageRef = mStorage.getReference();
-                                                mImageRef = mStorageRef.child("userImages/profilePictures/" + key + "/"
-                                                        + selectImageUri.getLastPathSegment() + "." + mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
-                                                uploadTask = mImageRef.putFile(selectImageUri);
-                                                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                    @Override
-                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                        Toast.makeText(ProfileDetailsActivity.this, "Profile Picture Uploaded", Toast.LENGTH_LONG).show();
-
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-
-                                                                Toast.makeText(ProfileDetailsActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                            }
+//                                            if(selectImageUri!=null) {
+//                                                ContentResolver cR = getContentResolver();
+//                                                MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+//
+//                                                mStorage = FirebaseStorage.getInstance();
+//                                                mStorageRef = mStorage.getReference();
+//                                                mImageRef = mStorageRef.child("userImages/profilePictures/" + key + "/"
+//                                                        + selectImageUri.getLastPathSegment() + "." + mimeTypeMap.getExtensionFromMimeType(cR.getType(selectImageUri)));
+//                                                uploadTask = mImageRef.putFile(selectImageUri);
+//                                                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                                                    @Override
+//                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                                        Toast.makeText(ProfileDetailsActivity.this, "Profile Picture Uploaded", Toast.LENGTH_LONG).show();
+//
+//                                                    }
+//                                                }).addOnFailureListener(new OnFailureListener() {
+//                                                            @Override
+//                                                            public void onFailure(@NonNull Exception e) {
+//
+//                                                                Toast.makeText(ProfileDetailsActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                                            }
+//                                                        });
+//                                            }
 
                                             /*TODO
                                             CHECK VISIBILITY USING PROGRESSBAR;
@@ -259,16 +260,22 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                             mDatabase = FirebaseDatabase.getInstance().getReference("Users/" + key);
                                             HashMap<String, Object> childUpdates = new HashMap<>();
 
-                                            childUpdates.put("userName", userNameFinal);
-                                            childUpdates.put("countryCode", countryCodeFinal);
-                                            childUpdates.put("phoneNumber", phoneNumberFinal);
-                                            childUpdates.put("email", currentuser.getEmail());
-                                            childUpdates.put("gender", genderFinal);
+                                            childUpdates.put(AppUtils.USER_NAME_STRING, userNameFinal);
+//                                            childUpdates.put("countryCode", countryCodeFinal);
+//                                            childUpdates.put("phoneNumber", phoneNumberFinal);
+                                            childUpdates.put(AppUtils.EMAIL_STRING, currentuser.getEmail());
+                                            childUpdates.put(AppUtils.GENDER_STRING, genderFinal);
+                                            childUpdates.put(AppUtils.PHONE_VERIFIED_STRING, false);
 
                                             mDatabase.updateChildren(childUpdates);
 
-                                            Intent intent = new Intent(ProfileDetailsActivity.this, OTPActivity.class);
-                                            intent.putExtra("phonenumber", phonenumber);
+//                                            Intent intent = new Intent(ProfileDetailsActivity.this, OTPActivity.class);
+//                                            intent.putExtra("phonenumber", phonenumber);
+//                                            startActivity(intent);
+//                                            finish();
+
+                                            Intent intent = new Intent(ProfileDetailsActivity.this, PhoneNumberActivity.class);
+//                                          intent.putExtra("phonenumber", phonenumber);
                                             startActivity(intent);
                                             finish();
                                         } else {

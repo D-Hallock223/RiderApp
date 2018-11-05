@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,7 +23,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class OTPActivity extends AppCompatActivity {
@@ -31,6 +36,9 @@ public class OTPActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressBar verifyProgressBar;
     private EditText editText;
+    private String phoneNumberFinal;
+    private String countryCodeFinal;
+    private String phonenumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +48,11 @@ public class OTPActivity extends AppCompatActivity {
         verifyProgressBar = findViewById(R.id.verifyProgressBar);
         editText = findViewById(R.id.editTextCode);
 
-        String phonenumber = getIntent().getStringExtra("phonenumber");
+        phoneNumberFinal = getIntent().getStringExtra("phoneNumberFinal");
+        countryCodeFinal = getIntent().getStringExtra("countryCodeFinal");
+
+        phonenumber = countryCodeFinal + phoneNumberFinal;
+
         sendVerificationCode(phonenumber);
 
         findViewById(R.id.buttonVerify).setOnClickListener(new View.OnClickListener() {
@@ -70,10 +82,32 @@ public class OTPActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            verifyProgressBar.setVisibility(View.INVISIBLE);
-                            Intent intent = new Intent(OTPActivity.this, SearchRideActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                            DatabaseReference db = FirebaseDatabase.getInstance().getReference("Users/" + firebaseUser.getUid());
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put(AppUtils.PHONE_NUMBER_STRING, phoneNumberFinal);
+                            map.put(AppUtils.COUNTRY_CODE_STRING, countryCodeFinal);
+
+                            db.updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        verifyProgressBar.setVisibility(View.INVISIBLE);
+
+                                        Intent intent = new Intent(OTPActivity.this, SearchRideActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    } else {
+                                        Toast.makeText(OTPActivity.this, "Error Updating", Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(OTPActivity.this, PhoneNumberActivity.class);
+                                        startActivity(intent);
+                                        finish();
+
+                                    }
+                                }
+                            });
+
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 Toast.makeText(OTPActivity.this, "Verification Code Invalid",
@@ -135,7 +169,7 @@ public class OTPActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(OTPActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
-            Intent intent = new Intent(OTPActivity.this, ProfileDetailsActivity.class);
+            Intent intent = new Intent(OTPActivity.this, PhoneNumberActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
