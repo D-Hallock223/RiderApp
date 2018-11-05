@@ -37,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activity.ResetPasswordActivity"/>
         <activity android:name=".Activity.RegisterActivity" />
 
         <meta-data
@@ -127,7 +128,8 @@
             android:name=".Activity.MyRidesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".Activity.OTPActivity" />
-        <activity android:name=".Activity.PhoneNumberActivity"></activity>
+        <activity android:name=".Activity.PhoneNumberActivity" />
+        <activity android:name=".Activity.ResetPasswordActivity"></activity>
     </application>
 
 </manifest>
