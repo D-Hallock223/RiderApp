@@ -43,6 +43,20 @@ public class ProfileViewActivity extends AppCompatActivity {
     private TextView mGender;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_view);
@@ -51,8 +65,8 @@ public class ProfileViewActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Profile");
         getSupportActionBar().setElevation(0);
 
-        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
-        LogHandle.checkDetailsAdded(mCurrentUser, this);
+//        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+//        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         mProfilePic = findViewById(R.id.im_apv_profile_pic);
         mUserName = findViewById(R.id.tv_apv_u_name);

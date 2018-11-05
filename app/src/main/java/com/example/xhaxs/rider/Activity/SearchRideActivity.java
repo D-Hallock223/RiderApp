@@ -78,6 +78,19 @@ public class SearchRideActivity extends AppCompatActivity {
 
     private FirebaseUser mCurrentUser;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +99,6 @@ public class SearchRideActivity extends AppCompatActivity {
 
         getSupportActionBar().setElevation(0);
         getSupportActionBar().setTitle("Search Available Rides");
-
-        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
-        LogHandle.checkDetailsAdded(mCurrentUser, this);
-
-
 
         mBottomNavigationView = findViewById(R.id.bn_bottom_nav);
         mBottomNavigationView.setSelectedItemId(R.id.mi_search_ride);

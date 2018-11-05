@@ -40,9 +40,12 @@ public final class LogHandle {
     }
 
     public static void checkDetailsAdded(FirebaseUser firebaseUser, final Activity activity){
+
         if(mapCache != null){
+            checkPhoneAuth(activity);
             return;
         }
+
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         db.child("Users/").child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

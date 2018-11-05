@@ -79,14 +79,28 @@ public class RideSummaryActivity extends AppCompatActivity {
     private int RESULT_CODE;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_summary);
 
-        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
-        LogHandle.checkDetailsAdded(mCurrentUser, this);
-
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+//        LogHandle.checkDetailsAdded(mCurrentUser, this);
+//
+//        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

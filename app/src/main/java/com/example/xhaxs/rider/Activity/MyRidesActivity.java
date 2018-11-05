@@ -51,14 +51,28 @@ public class MyRidesActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_rides);
 
         getSupportActionBar().setTitle("My Rides");
 
-        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), MyRidesActivity.this);
-        LogHandle.checkDetailsAdded(mCurrentUser, this);
+//        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), MyRidesActivity.this);
+//        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         mMessage = findViewById(R.id.tv_my_rides_messages);
 

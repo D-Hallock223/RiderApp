@@ -48,6 +48,20 @@ public class CreateRideActivity extends AppCompatActivity {
     DatabaseReference myRef = database.getReference("message");
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+        LogHandle.checkDetailsAdded(mCurrentUser, this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_ride);
@@ -65,8 +79,8 @@ public class CreateRideActivity extends AppCompatActivity {
         fromLocationFinal = null;
         toLocationFinal = null;
 
-        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
-        LogHandle.checkDetailsAdded(mCurrentUser, this);
+//        mCurrentUser = LogHandle.checkLogin(FirebaseAuth.getInstance(), this);
+//        LogHandle.checkDetailsAdded(mCurrentUser, this);
 
         getSupportActionBar().setElevation(0);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);

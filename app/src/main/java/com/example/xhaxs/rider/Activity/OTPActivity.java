@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.AppUtils;
+import com.example.xhaxs.rider.LogHandle;
 import com.example.xhaxs.rider.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -94,6 +95,8 @@ public class OTPActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
                                         verifyProgressBar.setVisibility(View.INVISIBLE);
+
+                                        LogHandle.flushCache();
 
                                         Intent intent = new Intent(OTPActivity.this, SearchRideActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
