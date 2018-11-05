@@ -48,6 +48,8 @@ public final class LogHandle {
         spinner = (ProgressBar) activity.findViewById(R.id.progress_bar_login_done);
         if(spinner != null) spinner.setVisibility(View.VISIBLE);
 
+        Log.d("-23-23-23", "Got details for log handle!-23-234-234-234-234-24");
+
         if(mapCache != null){
             checkPhoneAuth(activity);
             return;
