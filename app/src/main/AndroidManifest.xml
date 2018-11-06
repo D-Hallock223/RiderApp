@@ -8,7 +8,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -71,6 +73,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity android:name=".Activity.EmailVerificationActivity"/>
+
         <activity
             android:name=".Activity.CreateRideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
@@ -112,12 +115,12 @@
             android:name=".Activity.ProfileDetailsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
+             <!--<intent-filter>-->
+             <!--<action android:name="android.intent.action.MAIN" />-->
 
 
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+             <!--<category android:name="android.intent.category.LAUNCHER" />-->
+             <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".Activity.ProfileViewActivity"
@@ -125,13 +128,11 @@
         <activity
             android:name=".Activity.MyRidesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
-            android:name=".Activity.MyRidesActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".Activity.OTPActivity" />
+
         <activity android:name=".Activity.PhoneNumberActivity" />
-        <activity android:name=".Activity.ResetPasswordActivity" />
-        <activity android:name=".Activity.EmailVerificationActivity"></activity>
+
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+
     </application>
 
 </manifest>

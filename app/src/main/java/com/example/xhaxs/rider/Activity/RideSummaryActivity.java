@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.xhaxs.rider.Adapter.RideUserJoinSummaryAdapter;
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.Datatype.UserSumData;
 import com.example.xhaxs.rider.LogHandle;
@@ -28,8 +29,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,7 +128,7 @@ public class RideSummaryActivity extends AppCompatActivity {
             finish();
         }
 
-//        mImageViewOwnerImage = findViewById(R.id.iv_rsu_profile_pic);
+        mImageViewOwnerImage = findViewById(R.id.iv_rsu_profile_pic);
         mTextViewToLoc = findViewById(R.id.tv_rsu_to_loc);
         mTextViewFromLoc = findViewById(R.id.tv_rsu_from_loc);
         mTextViewMaxRiders = findViewById(R.id.tv_rsu_max_coord);
@@ -139,6 +145,7 @@ public class RideSummaryActivity extends AppCompatActivity {
         mLLLeaveButton = findViewById(R.id.ll_leave_button_layout);
         mCancelRideButton = findViewById(R.id.bt_rsu_cancel_ride);
         mTextViewRideCancelMessage = findViewById(R.id.tv_rsu_cancelled_ride_message);
+
 
         mStartRideButtons.setVisibility(View.GONE);
         mTextViewRideFinishMessage.setVisibility(View.GONE);
@@ -162,6 +169,33 @@ public class RideSummaryActivity extends AppCompatActivity {
                     toggleVisibilty(LEFT_CONST);
                 }
             }
+        }
+
+        if(LogHandle.mapCache != null){
+            Map<String, Object> map = LogHandle.mapCache;
+            if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
+                Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
+            }
+        } else {
+            FirebaseDatabase.getInstance().getReference()
+                    .child("Users/" + mCurrentUser.getUid())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                            if(map == null) return;
+                            else {
+                                if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
+                                    Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
         }
 
         mTextViewToLoc.setText("To: " + mCreateRideDetailData.getToLoc().toString());

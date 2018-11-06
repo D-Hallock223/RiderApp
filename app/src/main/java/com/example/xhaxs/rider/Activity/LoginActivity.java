@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         loginregbutton = findViewById(R.id.loginregbutton);
         resetpasswordbutton = findViewById(R.id.b_reset_password);
 
+
         mAuth = FirebaseAuth.getInstance();
 
 

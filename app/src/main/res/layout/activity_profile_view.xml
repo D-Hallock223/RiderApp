@@ -13,20 +13,37 @@
         android:layout_centerInParent="true"/>
 
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:id="@+id/im_apv_profile_pic"
-        android:scaleType="fitCenter"
-        android:src="@drawable/baseline_account_circle_24"
-        android:background="@color/colorPrimary"/>
+        android:id="@+id/rv_image_layout">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:id="@+id/im_apv_profile_pic"
+            android:src="@drawable/baseline_account_circle_24"
+            android:background="@color/colorPrimary"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/baseline_edit_24"
+            android:background="@android:color/transparent"
+            android:padding="24dp"
+            android:id="@+id/ib_change_profile_image"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#af000000"
         android:id="@+id/ll_apv_edit_layout"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <EditText
@@ -74,7 +91,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/im_apv_profile_pic">
+        android:layout_below="@+id/rv_image_layout">
 
     <LinearLayout
         android:layout_width="match_parent"
