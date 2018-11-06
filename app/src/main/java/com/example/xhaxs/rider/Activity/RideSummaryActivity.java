@@ -55,6 +55,7 @@ public class RideSummaryActivity extends AppCompatActivity {
     private TextView mRcyclerViewUsers;
     private TextView mTextViewRideFinishMessage;
     private TextView mTextViewStartTime;
+    private TextView mTextViewRideCancelMessage;
 
     private RecyclerView mRSRecyclerView;
     private RideUserJoinSummaryAdapter mRSAdapter;
@@ -63,6 +64,7 @@ public class RideSummaryActivity extends AppCompatActivity {
     private Button mJoinButton;
     private Button mLeaveButton;
     private Button mFinishRideButton;
+    private Button mCancelRideButton;
 
     private LinearLayout mButtonGetStartDirections;
     private LinearLayout mLLLeaveButton;
@@ -135,9 +137,13 @@ public class RideSummaryActivity extends AppCompatActivity {
         mTextViewStartTime = findViewById(R.id.tv_rsu_journey_time);
         mButtonGetStartDirections = findViewById(R.id.bt_ll_rsu_start_dir);
         mLLLeaveButton = findViewById(R.id.ll_leave_button_layout);
+        mCancelRideButton = findViewById(R.id.bt_rsu_cancel_ride);
+        mTextViewRideCancelMessage = findViewById(R.id.tv_rsu_cancelled_ride_message);
 
         mStartRideButtons.setVisibility(View.GONE);
         mTextViewRideFinishMessage.setVisibility(View.GONE);
+        mCancelRideButton.setVisibility(View.GONE);
+        mTextViewRideCancelMessage.setVisibility(View.GONE);
 
         if (mCreateRideDetailData.isOwner(mCurrentUser.getUid())) {
             mJoinButton.setVisibility(View.GONE);
@@ -145,6 +151,10 @@ public class RideSummaryActivity extends AppCompatActivity {
             checkIfTimeToStartRide();
             rideFinished();
         } else {
+
+            mCancelRideButton.setVisibility(View.GONE);
+            mTextViewRideCancelMessage.setVisibility(View.GONE);
+
             if (rideFinished() == false) {
                 if (mCreateRideDetailData.isMember(mCurrentUser.getUid())) {
                     toggleVisibilty(JOINED_CONST);
@@ -174,7 +184,9 @@ public class RideSummaryActivity extends AppCompatActivity {
                 userSumData,
                 mCreateRideDetailData.isOwner(mCurrentUser.getUid()),
                 mCreateRideDetailData.getRideOwner().getUid(),
-                mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED);
+                (mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED) ||
+                        (mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_CANCELLED)
+        );
 
         mRSRecyclerView.setAdapter(mRSAdapter);
 
@@ -241,6 +253,25 @@ public class RideSummaryActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (mCreateRideDetailData.setRideFinished(CreateRideDetailData.RIDE_FINSISHED)) {
+                                    updateDataBase("Ride Finshed", FINISHED_RIDE_CONST);
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
+            }
+        });
+
+        mCancelRideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(RideSummaryActivity.this)
+                        .setTitle("Cancel Ride")
+                        .setMessage("Do you really want to Cancel this ride?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (mCreateRideDetailData.setRideFinished(CreateRideDetailData.RIDE_CANCELLED)) {
                                     updateDataBase("Ride Finshed", FINISHED_RIDE_CONST);
                                 }
                             }
@@ -351,20 +382,51 @@ public class RideSummaryActivity extends AppCompatActivity {
     private void checkIfTimeToStartRide() {
         Calendar calendar = Calendar.getInstance();
         if (calendar.getTimeInMillis() > mCreateRideDetailData.getJourneyTime().getTimeInMillis() && mCreateRideDetailData.getRideFinished() != CreateRideDetailData.RIDE_FINSISHED) {
-            mStartRideButtons.setVisibility(View.VISIBLE);
+            if(checkCancelRide(true) == false) {
+                mStartRideButtons.setVisibility(View.VISIBLE);
+            }
         } else {
+            checkCancelRide(false);
             mStartRideButtons.setVisibility(View.GONE);
         }
     }
 
+    private boolean checkCancelRide(boolean timeUp){
+        if(mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_CANCELLED){
+            mCancelRideButton.setVisibility(View.GONE);
+            mTextViewRideCancelMessage.setVisibility(View.VISIBLE);
+            return true;
+        } else {
+            mTextViewRideCancelMessage.setVisibility(View.GONE);
+            if(timeUp == false){
+                mCancelRideButton.setVisibility(View.VISIBLE);
+            } else {
+                mCancelRideButton.setVisibility(View.GONE);
+            }
+        }
+        return false;
+    }
+
     private boolean rideFinished() {
-        if (mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED) {
+        if ((mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_FINSISHED)) {
+            mCancelRideButton.setVisibility(View.GONE);
+            mTextViewRideCancelMessage.setVisibility(View.GONE);
+            mTextViewRideCancelMessage.setVisibility(View.GONE);
             mTextViewRideFinishMessage.setVisibility(View.VISIBLE);
             mJoinButton.setVisibility(View.GONE);
             mLLLeaveButton.setVisibility(View.GONE);
             return true;
-        } else {
+        } else if((mCreateRideDetailData.getRideFinished() == CreateRideDetailData.RIDE_CANCELLED)) {
+            mCancelRideButton.setVisibility(View.GONE);
             mTextViewRideFinishMessage.setVisibility(View.GONE);
+            mTextViewRideCancelMessage.setVisibility(View.VISIBLE);
+            mJoinButton.setVisibility(View.GONE);
+            mLLLeaveButton.setVisibility(View.GONE);
+            return true;
+        }
+        else {
+            mTextViewRideFinishMessage.setVisibility(View.GONE);
+            mTextViewRideCancelMessage.setVisibility(View.GONE);
             return false;
         }
     }

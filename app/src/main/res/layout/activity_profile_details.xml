@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="24dp"
     tools:context=".Activity.ProfileDetailsActivity">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_centerInParent="true"
+        android:id="@+id/pb_apd_progress_bar"
+        android:visibility="invisible"
+        android:indeterminate="true"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -51,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="16dp"
-                android:background="@drawable/picture_circle_back"
+                android:background="@drawable/red_button"
                 android:backgroundTint="@color/colorAccent"
                 android:paddingVertical="16dp"
                 android:text="Submit"
@@ -61,4 +71,4 @@
         </LinearLayout>
 
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

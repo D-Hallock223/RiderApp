@@ -76,6 +76,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
     private int genderFinal;
 
+    private ProgressBar progressBar;
+
     private String phonenumber;
 
     @Override
@@ -91,11 +93,18 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         mProfilePic = findViewById(R.id.iv_submit_profile_pic);
         mUserName = findViewById(R.id.et_sumit_profile_name);
 
+        progressBar = findViewById(R.id.pb_apd_progress_bar);
+        progressBar.setVisibility(View.GONE);
+
+        mSubmitDetails = findViewById(R.id.b_submit_profile_od);
+
+
+        mSubmitDetails.setClickable(true);
+
 //        mCountryCode = findViewById(R.id.et_sumit_profile_country_code);
 //        countryCodeFinal = mCountryCode.getText().toString();
 //        mPhoneNumber = findViewById(R.id.et_sumit_profile_phone);
 
-        mSubmitDetails = findViewById(R.id.b_submit_profile_od);
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         genderFinal = 0;
@@ -158,6 +167,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         mSubmitDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                progressBar.setVisibility(View.VISIBLE);
+                mSubmitDetails.setClickable(false);
                 
                 if (!TextUtils.isEmpty(userNameFinal)
                         && (genderFinal == 0 || genderFinal == 1 || genderFinal == 2)
@@ -182,6 +194,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
+
 
                                         if(task.isSuccessful()) {
                                             String key = currentuser.getUid();
@@ -227,12 +240,15 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
 
+                                                        progressBar.setVisibility(View.GONE);
+
                                                         Intent intent = new Intent(ProfileDetailsActivity.this, PhoneNumberActivity.class);
                                                         intent.putExtra(AppUtils.CURRENT_USER_STRING,
                                                                 new UserSumData(firebaseUser.getUid(), userNameFinal, firebaseUser.getEmail())
                                                         );
                                                         startActivity(intent);
                                                         finish();
+                                                        mSubmitDetails.setClickable(true);
                                                     }
                                                 }
                                             });

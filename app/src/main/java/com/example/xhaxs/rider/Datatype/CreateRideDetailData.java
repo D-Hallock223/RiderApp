@@ -18,11 +18,14 @@ public class CreateRideDetailData implements Parcelable {
     public static final String FROM_LOC_STRING = "from_loc";
     public static final String RIDE_USER_ARRAY_STRING = "ride_users";
     public static final String JOURNEY_TIME_STRING = "journey_time";
-    private static final String MAX_ACC_STRING = "max_accomodation";
+    public static final String MAX_ACC_STRING = "max_accomodation";
     public static final String RIDE_FINISH_STRING = "is_ride_finish";
+    public static final String RIDE_CANCELLED_STRING = "is_ride_cancelled";
 
     public static final int RIDE_UNDONE = -1;
     public static final int RIDE_FINSISHED = 1;
+
+    public static final int RIDE_CANCELLED = 2;
 
     private String rideID;
 

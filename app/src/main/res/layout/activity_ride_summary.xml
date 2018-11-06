@@ -13,8 +13,8 @@
         android:layout_centerInParent="true"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,6 +47,16 @@
                     android:backgroundTint="@color/colorPrimary"
                     android:textColor="@color/white"
                     android:text="Join" />
+
+                <Button
+                    android:id="@+id/bt_rsu_cancel_ride"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@drawable/red_button"
+                    android:backgroundTint="@color/colorAccent"
+                    android:textColor="@color/white"
+                    android:text="Cancel Ride" />
 
                 <LinearLayout
                     android:id="@+id/ll_leave_button_layout"
@@ -128,6 +138,16 @@
                     android:layout_marginHorizontal="16dp"
                     android:gravity="center"
                     android:text="(Ride Finished)"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/tv_rsu_cancelled_ride_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginHorizontal="16dp"
+                    android:gravity="center"
+                    android:text="(Ride Cancelled)"
                     android:textSize="24sp" />
 
 
@@ -247,6 +267,7 @@
         </RelativeLayout>
 
     </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
