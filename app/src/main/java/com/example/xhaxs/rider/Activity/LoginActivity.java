@@ -30,7 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "facelog";
-    private Button loginbutton, loginregbutton;
+    private Button loginbutton, loginregbutton,resetpasswordbutton;
     private EditText loginemail, loginpassword;
     private ProgressBar loginprogressbar;
     private FirebaseAuth mAuth;
@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         loginpassword = findViewById(R.id.loginpassword);
         loginprogressbar = findViewById(R.id.loginprogressbar);
         loginregbutton = findViewById(R.id.loginregbutton);
+        resetpasswordbutton = findViewById(R.id.b_reset_password);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -61,7 +62,14 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
+        resetpasswordbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendtoreg = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+                startActivity(sendtoreg);
+                finish();
+            }
+        });
         loginbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
