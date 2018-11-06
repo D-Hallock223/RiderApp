@@ -71,10 +71,20 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 if (task.isSuccessful()) {
                                     Toast.makeText(RegisterActivity.this, "Account Created", Toast.LENGTH_SHORT).show();
-                                    Intent sendtomain = new Intent(RegisterActivity.this, ProfileDetailsActivity.class);
-
-                                    startActivity(sendtomain);
-                                    finish();
+                                    mAuth.getCurrentUser().sendEmailVerification()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(RegisterActivity.this, "Verificaion email sent to : " + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
+                                                    } else{
+                                                        Toast.makeText(RegisterActivity.this,"Failed to sent verification email",Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    Intent sendtomain = new Intent(RegisterActivity.this, LoginActivity.class);
+                                                    startActivity(sendtomain);
+                                                    finish();
+                                                }
+                                            });
                                 } else {
                                     String error = task.getException().getMessage();
                                     Toast.makeText(RegisterActivity.this, "Error:" + error, Toast.LENGTH_SHORT).show();
@@ -100,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currenruser = mAuth.getCurrentUser();
-        if (currenruser != null) {
+        if (currenruser != null && currenruser.isEmailVerified() ) {
             // user is logged in and no need to register/login
             Intent sendtomain = new Intent(RegisterActivity.this, ProfileDetailsActivity.class);
             startActivity(sendtomain);
