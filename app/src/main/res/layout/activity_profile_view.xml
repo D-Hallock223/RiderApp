@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Activity.ProfileViewActivity">
 
+
     <include layout="@layout/check_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,6 +20,56 @@
         android:scaleType="fitCenter"
         android:src="@drawable/baseline_account_circle_24"
         android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#af000000"
+        android:id="@+id/ll_apv_edit_layout"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:id="@+id/et_apv_new_value"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="12dp"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="8dp"
+            android:hint="Enter New Value"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/next_button_paint"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="16dp"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_check_24"
+                android:id="@+id/ib_apv_edit_true"
+                android:padding="16dp"
+                android:backgroundTint="@android:color/transparent"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_clear_white_24"
+                android:id="@+id/ib_apv_edit_false"
+                android:padding="16dp"
+                android:backgroundTint="@android:color/transparent"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -67,13 +118,29 @@
             android:text="Email"
             android:textSize="16sp"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="name@gmailcom"
-            android:id="@+id/tv_apv_email"
-            android:textColor="@android:color/black"
-            android:textSize="18sp"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="name@gmailcom"
+                android:id="@+id/tv_apv_email"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_edit_24"
+                android:paddingHorizontal="12dp"
+                android:id="@+id/ib_email_edit"
+                android:background="@android:color/transparent"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -91,13 +158,29 @@
             android:text="Contact"
             android:textSize="16sp"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="+91 9876543210"
-            android:id="@+id/tv_apv_contacts"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+91 9876543210"
+                android:id="@+id/tv_apv_contacts"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_edit_24"
+                android:paddingHorizontal="12dp"
+                android:id="@+id/ib_contact_edit"
+                android:background="@android:color/transparent"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

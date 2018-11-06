@@ -218,7 +218,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                                                 HashMap<String, Object> childUpdates = new HashMap<>();
 
                                             childUpdates.put(AppUtils.USER_NAME_STRING, userNameFinal);
-                                            childUpdates.put(AppUtils.EMAIL_STRING, currentuser.getEmail());
+//                                            childUpdates.put(AppUtils.EMAIL_STRING, currentuser.getEmail());
                                             childUpdates.put(AppUtils.GENDER_STRING, genderFinal);
                                             childUpdates.put(AppUtils.PHONE_VERIFIED_STRING, false);
 
