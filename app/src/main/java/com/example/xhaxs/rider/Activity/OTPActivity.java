@@ -82,6 +82,8 @@ public class OTPActivity extends AppCompatActivity {
     }
     private void verifyCode(String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationid, code);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser.updatePhoneNumber(credential);
 //        signInWithCredential(credential);
         uploadToDatabase();
     }
