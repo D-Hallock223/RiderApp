@@ -1,5 +1,6 @@
 package com.example.xhaxs.rider.Activity;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,6 +57,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -95,6 +97,8 @@ public class ProfileViewActivity extends AppCompatActivity {
     private Boolean editable;
 
     private Uri selectImageUri;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onStart() {
@@ -152,12 +156,16 @@ public class ProfileViewActivity extends AppCompatActivity {
         mImageChangePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, ProfileDetailsActivity.GALLERY_PICK);
-                }
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                if (intent.resolveActivity(getPackageManager()) != null) {
+//                    startActivityForResult(intent, ProfileDetailsActivity.GALLERY_PICK);
+//                }
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1, 1)
+                        .start(ProfileViewActivity.this);
             }
         });
 
@@ -196,80 +204,6 @@ public class ProfileViewActivity extends AppCompatActivity {
         }
 
         loadTotalRides();
-
-//        mBEditEmail.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                mEditTextNewValue.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-//
-//                mEditValue.setVisibility(View.VISIBLE);
-//
-//                final String oldEmail = toShowUser.getEmail();
-//
-//                final TextWatcher emailTextWatcher = new TextWatcher() {
-//                        @Override
-//                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                            if(TextUtils.isEmpty(s)) newValue = oldEmail;
-//                            else newValue = s.toString();
-//                        }
-//
-//                        @Override
-//                        public void afterTextChanged(Editable s) {
-//
-//                        }
-//                };
-//
-//                mEditTextNewValue.addTextChangedListener(emailTextWatcher);
-//
-//                View.OnClickListener checkOnClickListener = new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        if(newValue.equals(oldEmail)) return;
-//
-//                        FirebaseAuth.getInstance().getCurrentUser().updateEmail(newValue).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                if(task.isSuccessful()){
-//                                    Toast.makeText(ProfileViewActivity.this, "Email Updated",  Toast.LENGTH_LONG).show();
-//                                    toShowUser.setEmail(newValue);
-//
-//                                    HashMap<String, Object> map = new HashMap<String, Object>();
-//                                    map.put(AppUtils.EMAIL_STRING, newValue);
-//
-//                                    FirebaseDatabase.getInstance().getReference()
-//                                            .child("Users/" + mCurrentUser.getUid())
-//                                            .updateChildren(map);
-//
-//                                    mEmail.setText(newValue);
-//                                    mEditValue.setVisibility(View.GONE);
-//                                }
-//
-////                                mEditTextNewValue.removeTextChangedListener(emailTextWatcher);
-//                            }
-//                        });
-//                    }
-//                };
-//
-//                mChooseNewValue.setOnClickListener(checkOnClickListener);
-//
-//                mCancelNewValue.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        mEditTextNewValue.removeTextChangedListener(emailTextWatcher);
-//                        mEditValue.setVisibility(View.GONE);
-//                    }
-//                });
-//
-//            }
-//        });
-//
     }
 
     public void updateDatabase(Uri photoUri){
@@ -384,7 +318,9 @@ public class ProfileViewActivity extends AppCompatActivity {
         }
 
         if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null){
-            Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mProfilePic);
+            Log.d("----\n\n", "\n\n\n" + "\t----Loading data----\n\n\n");
+//            AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mProfilePic);
+            Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).into(mProfilePic);
         }
 
         mContact.setText(cc + " " + cv);
@@ -406,21 +342,27 @@ public class ProfileViewActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
 
                 selectImageUri = result.getUri();
-                mProfilePic.setImageURI(selectImageUri);
 
+                final Bitmap imageBitmap = AppUtils.reduceImageSize(ProfileViewActivity.this, selectImageUri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-                String imageExt;
+                final byte[] uploadImageAsByteArray = baos.toByteArray();
+
+                mProfilePic.setImageBitmap(imageBitmap);
+
+//                String imageExt;
 
                 if(selectImageUri != null){
-                    ContentResolver cr = getContentResolver();
-                    MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                    imageExt = mimeTypeMap.getExtensionFromMimeType(cr.getType(selectImageUri));
+//                    ContentResolver cr = getContentResolver();
+//                    MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+//                    imageExt = mimeTypeMap.getExtensionFromMimeType(cr.getType(selectImageUri));
 
                     final StorageReference mImageRef = FirebaseStorage.getInstance().getReference().child(AppUtils.PROFILE_IMAGE_FOLDER_STRING);
 
-                    final StorageReference mStorageRef = mImageRef.child(mCurrentUser.getUid() + imageExt);
+                    final StorageReference mStorageRef = mImageRef.child(mCurrentUser.getUid() + ".jpeg");
 
-                    UploadTask uploadTask = mStorageRef.putFile(selectImageUri);
+                    UploadTask uploadTask = mStorageRef.putBytes(uploadImageAsByteArray);
 
                     Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override

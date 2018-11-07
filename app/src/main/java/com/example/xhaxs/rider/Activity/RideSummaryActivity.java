@@ -171,14 +171,15 @@ public class RideSummaryActivity extends AppCompatActivity {
             }
         }
 
-        if(LogHandle.mapCache != null){
-            Map<String, Object> map = LogHandle.mapCache;
-            if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
-                Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
-            }
-        } else {
+//        if(LogHandle.mapCache != null){
+//            Map<String, Object> map = LogHandle.mapCache;
+//            if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
+////                Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
+//                AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mImageViewOwnerImage);
+//            }
+//        } else {
             FirebaseDatabase.getInstance().getReference()
-                    .child("Users/" + mCurrentUser.getUid())
+                    .child("Users/" + mCreateRideDetailData.getRideOwner().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -186,7 +187,9 @@ public class RideSummaryActivity extends AppCompatActivity {
                             if(map == null) return;
                             else {
                                 if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
-                                    Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
+                                    Log.d("----sdflksnfdlkndfl", "\n\n\n" + "\t----Loading data----\n\n\n");
+                                    Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).into(mImageViewOwnerImage);
+//                                    AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mImageViewOwnerImage);
                                 }
                             }
                         }
@@ -196,7 +199,7 @@ public class RideSummaryActivity extends AppCompatActivity {
 
                         }
                     });
-        }
+//        }
 
         mTextViewToLoc.setText("To: " + mCreateRideDetailData.getToLoc().toString());
         mTextViewFromLoc.setText("From: " + mCreateRideDetailData.getFromLoc().toString());

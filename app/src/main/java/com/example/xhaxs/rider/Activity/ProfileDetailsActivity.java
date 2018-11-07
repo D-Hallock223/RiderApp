@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -48,6 +49,7 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -141,12 +143,17 @@ public class ProfileDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, GALLERY_PICK);
-                }
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                if (intent.resolveActivity(getPackageManager()) != null) {
+//                    startActivityForResult(intent, GALLERY_PICK);
+//                }
+
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1, 1)
+                        .start(ProfileDetailsActivity.this);
             }
         });
 
@@ -195,16 +202,25 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                         finish();
                     } else {
 
+
                         String imageExt;
 
                         if(selectImageUri != null){
-                            ContentResolver cr = getContentResolver();
-                            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-                            imageExt = mimeTypeMap.getExtensionFromMimeType(cr.getType(selectImageUri));
 
-                            mStorageRef = mImageRef.child(firebaseUser.getUid() + imageExt);
+                            final Bitmap imageBitmap = AppUtils.reduceImageSize(ProfileDetailsActivity.this, selectImageUri);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-                            UploadTask uploadTask = mStorageRef.putFile(selectImageUri);
+                            final byte[] uploadImageAsByteArray = baos.toByteArray();
+
+                            mProfilePic.setImageBitmap(imageBitmap);
+//                            ContentResolver cr = getContentResolver();
+//                            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+//                            imageExt = mimeTypeMap.getExtensionFromMimeType(cr.getType(selectImageUri));
+
+                            mStorageRef = mImageRef.child(firebaseUser.getUid() + ".jpeg");
+
+                            UploadTask uploadTask = mStorageRef.putBytes(uploadImageAsByteArray);
 
                             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                 @Override
@@ -300,7 +316,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
-            selectImageUri = data.getData();
+//            selectImageUri = data.getData();
 //            if (null != selectImageUri) {
 //                String path = getPathFromURI(selectImageUri);
 //                mProfilePic.setImageURI(selectImageUri);
@@ -308,10 +324,10 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 //                selectImageUri=null;
 //            }
 
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1, 1)
-                    .start(this);
+//            CropImage.activity()
+//                    .setGuidelines(CropImageView.Guidelines.ON)
+//                    .setAspectRatio(1, 1)
+//                    .start(this);
         }
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
