@@ -320,7 +320,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null){
             Log.d("----\n\n", "\n\n\n" + "\t----Loading data----\n\n\n");
 //            AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mProfilePic);
-            Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).into(mProfilePic);
+            Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mProfilePic);
         }
 
         mContact.setText(cc + " " + cv);

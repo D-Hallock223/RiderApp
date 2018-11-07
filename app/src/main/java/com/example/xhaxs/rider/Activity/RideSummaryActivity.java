@@ -188,7 +188,7 @@ public class RideSummaryActivity extends AppCompatActivity {
                             else {
                                 if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
                                     Log.d("----sdflksnfdlkndfl", "\n\n\n" + "\t----Loading data----\n\n\n");
-                                    Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).into(mImageViewOwnerImage);
+                                    Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
 //                                    AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mImageViewOwnerImage);
                                 }
                             }
