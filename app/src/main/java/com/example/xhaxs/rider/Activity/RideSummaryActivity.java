@@ -34,8 +34,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.MemoryPolicy;
+//import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -171,13 +171,6 @@ public class RideSummaryActivity extends AppCompatActivity {
             }
         }
 
-//        if(LogHandle.mapCache != null){
-//            Map<String, Object> map = LogHandle.mapCache;
-//            if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
-////                Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
-//                AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mImageViewOwnerImage);
-//            }
-//        } else {
             FirebaseDatabase.getInstance().getReference()
                     .child("Users/" + mCreateRideDetailData.getRideOwner().getUid())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -186,10 +179,14 @@ public class RideSummaryActivity extends AppCompatActivity {
                             Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                             if(map == null) return;
                             else {
-                                if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null) {
+                                if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null && map.get(AppUtils.PROFILE_PIC_SIZE_STRING) != null) {
                                     Log.d("----sdflksnfdlkndfl", "\n\n\n" + "\t----Loading data----\n\n\n");
-                                    Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
+//                                    Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mImageViewOwnerImage);
 //                                    AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mImageViewOwnerImage);
+                                    AppUtils.loadFromNetImage(RideSummaryActivity.this,
+                                            map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(),
+                                            mImageViewOwnerImage,
+                                            Integer.parseInt(map.get(AppUtils.PROFILE_PIC_SIZE_STRING).toString()));
                                 }
                             }
                         }

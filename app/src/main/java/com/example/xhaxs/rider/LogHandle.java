@@ -90,6 +90,7 @@ public final class LogHandle {
 
         mAuth.signOut();
         LoginManager.getInstance().logOut();
+        flushCache();
         Intent sendtologin = new Intent(activity.getApplicationContext(), LoginActivity.class);
         activity.startActivity(sendtologin);
         activity.finish();

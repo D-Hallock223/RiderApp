@@ -50,8 +50,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.MemoryPolicy;
+//import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -63,6 +63,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import bolts.Bolts;
 
@@ -206,11 +207,12 @@ public class ProfileViewActivity extends AppCompatActivity {
         loadTotalRides();
     }
 
-    public void updateDatabase(Uri photoUri){
+    public void updateDatabase(Uri photoUri, int imageSize){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
 
         HashMap<String, Object> map = new HashMap<>();
         map.put(AppUtils.PROFILE_PIC_URL_STRING, photoUri.toString());
+        map.put(AppUtils.PROFILE_PIC_SIZE_STRING, imageSize);
         db.child("Users/" + mCurrentUser.getUid()).updateChildren(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -313,14 +315,19 @@ public class ProfileViewActivity extends AppCompatActivity {
         if(map.get("countryCode") != null){
             cc = map.get("countryCode").toString();
         }
+
         if(map.get("gender") != null){
             gender = ProfileDetailsActivity.AVAILABLE_GENDERS[Integer.parseInt(map.get("gender").toString())];
         }
 
-        if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null){
+        if(map.get(AppUtils.PROFILE_PIC_URL_STRING) != null && map.get(AppUtils.PROFILE_PIC_SIZE_STRING) != null){
             Log.d("----\n\n", "\n\n\n" + "\t----Loading data----\n\n\n");
 //            AppUtils.loadImage(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(), mProfilePic);
-            Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mProfilePic);
+//            Picasso.get().load(map.get(AppUtils.PROFILE_PIC_URL_STRING).toString()).memoryPolicy(MemoryPolicy.NO_CACHE).into(mProfilePic);
+              AppUtils.loadFromNetImage(ProfileViewActivity.this,
+                      map.get(AppUtils.PROFILE_PIC_URL_STRING).toString(),
+                      mProfilePic,
+                      Integer.parseInt(map.get(AppUtils.PROFILE_PIC_SIZE_STRING).toString()));
         }
 
         mContact.setText(cc + " " + cv);
@@ -345,6 +352,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
                 final Bitmap imageBitmap = AppUtils.reduceImageSize(ProfileViewActivity.this, selectImageUri);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                final int imageSize = imageBitmap.getByteCount();
                 imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
                 final byte[] uploadImageAsByteArray = baos.toByteArray();
@@ -360,7 +368,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
                     final StorageReference mImageRef = FirebaseStorage.getInstance().getReference().child(AppUtils.PROFILE_IMAGE_FOLDER_STRING);
 
-                    final StorageReference mStorageRef = mImageRef.child(mCurrentUser.getUid() + ".jpeg");
+                    final StorageReference mStorageRef = mImageRef.child(mCurrentUser.getUid() + "_" + UUID.randomUUID().toString() + ".jpeg");
 
                     UploadTask uploadTask = mStorageRef.putBytes(uploadImageAsByteArray);
 
@@ -381,7 +389,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
                                 Log.d("-------", "++++++++++\n\t" + uri.toString() + "------------\n\t");
 
-                                updateDatabase(uri);
+                                updateDatabase(uri, imageSize);
                             }
                         }
                     });

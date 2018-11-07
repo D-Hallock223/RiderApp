@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.xhaxs.rider.AppUtils;
 import com.example.xhaxs.rider.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -40,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        AppUtils.getStoragePermission(this);
 
         loginbutton = findViewById(R.id.loginbutton);
         loginregbutton = findViewById(R.id.loginregbutton);

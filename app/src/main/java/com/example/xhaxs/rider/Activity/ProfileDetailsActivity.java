@@ -51,6 +51,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -211,6 +212,8 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
+                            final int imageSize = imageBitmap.getByteCount();
+
                             final byte[] uploadImageAsByteArray = baos.toByteArray();
 
                             mProfilePic.setImageBitmap(imageBitmap);
@@ -218,7 +221,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 //                            MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
 //                            imageExt = mimeTypeMap.getExtensionFromMimeType(cr.getType(selectImageUri));
 
-                            mStorageRef = mImageRef.child(firebaseUser.getUid() + ".jpeg");
+                            mStorageRef = mImageRef.child(firebaseUser.getUid() + "_" + UUID.randomUUID().toString() + ".jpeg");
 
                             UploadTask uploadTask = mStorageRef.putBytes(uploadImageAsByteArray);
 
@@ -239,14 +242,14 @@ public class ProfileDetailsActivity extends AppCompatActivity {
 
                                         Log.d("-------", "++++++++++\n\t" + uri.toString() + "------------\n\t");
 
-                                        updateDatabase(true, uri);
+                                        updateDatabase(true, uri, imageSize);
                                     }
                                 }
                             });
 
                          } else {
 
-                            updateDatabase(false, null);
+                            updateDatabase(false, null, -1);
 
                         }
 
@@ -258,7 +261,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
         });
     }
 
-    public void updateDatabase(final boolean uploadProfilePic, final Uri photoUri){
+    public void updateDatabase(final boolean uploadProfilePic, final Uri photoUri, final int imageSize){
 
         UserProfileChangeRequest userProfileChangeRequest;
 
@@ -283,6 +286,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                             childUpdates.put(AppUtils.PHONE_VERIFIED_STRING, false);
                             if(uploadProfilePic == true) {
                                 childUpdates.put(AppUtils.PROFILE_PIC_URL_STRING, photoUri.toString());
+                                childUpdates.put(AppUtils.PROFILE_PIC_SIZE_STRING, imageSize);
                             }
 
                             mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
