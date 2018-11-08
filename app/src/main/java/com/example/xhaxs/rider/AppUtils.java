@@ -163,29 +163,31 @@ public final class AppUtils {
             @Override
             protected Void doInBackground(Void... voids) {
 
-//                String storeagePath = Environment.getExternalStorageDirectory().toString() + File.pathSeparator + APP_MAIN_NAME;
-//                if(type == MEDIA_TYPE_IMAGE){
-//                    storeagePath = storeagePath + File.pathSeparator + APP_IMAGE_PATH;
-//                }
-//
-//                File folder = new File(storeagePath);
-//                if(!folder.exists() && !folder.mkdirs()){
-//                    Log.d("\n\n--", "\n\n-------------\nError creating folders" + "\n\n");
-//                    return null;
-//                }
-                String fileName = URLUtil.guessFileName(path, null, null);
-//
-                Log.d("----", "-----------------------\n\n\tGot Guessed File Name" + fileName + "\n\n\n---------------------");
+                String storeagePath = APP_MAIN_NAME;
+                if(type == MEDIA_TYPE_IMAGE){
+                    storeagePath = storeagePath + File.separator + APP_IMAGE_PATH;
+                }
 
-//                File file = new File(storeagePath + File.separator + fileName);
-                File file = new File(Environment.getExternalStorageDirectory() + File.separator + fileName);
+                File folder = new File(Environment.getExternalStorageDirectory().toString(), storeagePath);
+                if(folder.exists() == false){
+                    if(folder.mkdirs() == false) {
+                        Log.d("\n\n--", "\n\n-------------\nError creating folders" + "\n\n");
+                        return null;
+                    }
+                }
+
+                String fileName = URLUtil.guessFileName(path, null, null);
+
+                Log.d("----", "-----------------------\n\n\tGot Guessed File Name: " + fileName + "\n\n\n---------------------");
+
+                File file = new File(Environment.getExternalStorageDirectory().toString(), storeagePath + File.separator + fileName);
                 try {
-                    file.createNewFile();
                     FileOutputStream fo = new FileOutputStream(file);
                     fo.write(bytes);
                     fo.close();
+                    Log.d("----", "-----------------------\n\tFile Cached in -> " + file + "\n---------------------");
                 } catch (IOException e){
-                    Log.d("----", "-----------------------\n\n\tError Creating File" + e.getMessage() + "\n\n\n---------------------");
+                    Log.d("----", "-----------------------\n\tError Creating File" + e.getMessage() + "\n---------------------");
                 }
                 return null;
             }
@@ -194,17 +196,23 @@ public final class AppUtils {
     }
 
     public static final Uri checkInCache(String path, int type){
-//        String storeagePath = Environment.getExternalStorageDirectory().toString() + File.pathSeparator + APP_MAIN_NAME;
-//        if(type == MEDIA_TYPE_IMAGE){
-//            storeagePath = storeagePath + File.pathSeparator + APP_IMAGE_PATH;
-//        }
+        String storeagePath = APP_MAIN_NAME;
+        if(type == MEDIA_TYPE_IMAGE){
+            storeagePath = storeagePath + File.separator + APP_IMAGE_PATH;
+        }
         String guessedName = URLUtil.guessFileName(path, null, null);
-        Log.d("----", "-----------------------\n\n\tGot Guessed File Name" + guessedName + "\n\n\n---------------------");
-//        String filePath = storeagePath + File.pathSeparator + guessedName;
-        String filePath = Environment.getExternalStorageDirectory() + File.separator + guessedName;
-        File file = new File(filePath);
-        if(file.exists() == true) return Uri.fromFile(file);
+        Log.d("----", "-----------------------\n\n\tGot Guessed File Name: " + guessedName + "\n\n\n---------------------");
+        String filePath = storeagePath + File.separator + guessedName;
+//        String filePath = Environment.getExternalStorageDirectory() + File.separator + guessedName;
+        File file = new File(Environment.getExternalStorageDirectory().toString(), filePath);
+        Log.d("----", "-----------------------\n\n\tChecking File in -> " + file + "\n\n\n---------------------");
+        if(file.exists() == true){
+            Log.d("----", "-----------------------\n\n\tFile Found in Cache\n\n\n---------------------");
+            return Uri.fromFile(file);
+        }
         return null;
-
     }
 }
+
+//Cached in -> /storage/emulated/0/hillshare:images/lbojf2AHrlSgfnfnt844hN6ULH82_3c757486-b45a-44d4-9319-a69d2fd48b51.jpeg
+//Checking File in -> /storage/emulated/0/hillshare:images:lbojf2AHrlSgfnfnt844hN6ULH82_3c757486-b45a-44d4-9319-a69d2fd48b51.jpeg
