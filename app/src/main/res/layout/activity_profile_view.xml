@@ -15,12 +15,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="360dp"
         android:id="@+id/rv_image_layout">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="360dp"
             android:scaleType="centerCrop"
             android:id="@+id/im_apv_profile_pic"
             android:src="@drawable/baseline_account_circle_24"
