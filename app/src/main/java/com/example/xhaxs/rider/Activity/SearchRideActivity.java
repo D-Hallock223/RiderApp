@@ -69,7 +69,7 @@ public class SearchRideActivity extends AppCompatActivity {
     public TextView mMessageTextView;
 
     private RideDetailTask mRideDetailTask;
-    private CreateRideDetailData[] mCreateRideDetailData;
+    private ArrayList<CreateRideDetailData> mCreateRideDetailData;
     private Place fromLocationFinal;
     private Place toLocationFinal;
 
@@ -168,7 +168,7 @@ public class SearchRideActivity extends AppCompatActivity {
         mRVPossibleLocations.setHasFixedSize(true);
         mLayoutManagerPos = new LinearLayoutManager(this);
         mRVPossibleLocations.setLayoutManager(mLayoutManagerPos);
-        mCreateRideDetailData = new CreateRideDetailData[0];
+        mCreateRideDetailData = new ArrayList<>(0);
         mSRPosAdapter = new SRPosAdapter(SearchRideActivity.this, mCreateRideDetailData);
         mRVPossibleLocations.setAdapter(mSRPosAdapter);
 
@@ -202,7 +202,7 @@ public class SearchRideActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    public void swapPosData(CreateRideDetailData[] createRideDetailData) {
+    public void swapPosData(ArrayList<CreateRideDetailData> createRideDetailData) {
 //        mRVPossibleLocations.setVisibility(View.VISIBLE);
         mCreateRideDetailData = null;
         if (createRideDetailData != null) {
@@ -212,8 +212,8 @@ public class SearchRideActivity extends AppCompatActivity {
     }
 
     public void updateAdapterAtIndex(CreateRideDetailData createRideDetailData, int index){
-        mCreateRideDetailData[index] = createRideDetailData;
-        mSRPosAdapter.updateSpecificItem(mCreateRideDetailData[index], index);
+        mCreateRideDetailData.set(index, createRideDetailData);
+        mSRPosAdapter.updateSpecificItem(mCreateRideDetailData.get(index), index);
     }
 
     public String makePosRideURL() {
