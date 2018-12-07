@@ -24,6 +24,7 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager mCallbackManager;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
@@ -208,7 +212,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.w(TAG, "Google sign in failed", e);
                 // ...
             }
-        } else{
+        }
+        else{
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -252,7 +257,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        /*Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);*/
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
