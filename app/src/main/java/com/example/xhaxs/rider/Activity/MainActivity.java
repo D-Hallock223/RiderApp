@@ -2,6 +2,7 @@ package com.example.xhaxs.rider.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar maintoolbar;
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +29,20 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("HillShare");
 
         mAuth = FirebaseAuth.getInstance();
-
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser() == null){
+                    startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                }
+            }
+        };
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
+        mAuth.addAuthStateListener(mAuthListener);
         LogHandle.checkLogin(FirebaseAuth.getInstance(), MainActivity.this);
     }
 
