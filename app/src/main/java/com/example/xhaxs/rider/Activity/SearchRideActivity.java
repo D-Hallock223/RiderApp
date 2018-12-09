@@ -134,9 +134,12 @@ public class SearchRideActivity extends AppCompatActivity {
 
         placeAutocompleteFragmentFrom
                 .setFilter(new AutocompleteFilter.Builder().setTypeFilter(Place.TYPE_COUNTRY).setCountry("IN").build());
+        placeAutocompleteFragmentFrom.setHint("From");
 
         placeAutocompleteFragmentTo
                 .setFilter(new AutocompleteFilter.Builder().setTypeFilter(Place.TYPE_COUNTRY).setCountry("IN").build());
+        placeAutocompleteFragmentTo.setHint("To");
+
 
         placeAutocompleteFragmentFrom.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override

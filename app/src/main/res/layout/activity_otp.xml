@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity.OTPActivity">
+
     <TextView
+        android:id="@+id/otptxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="One Time Password"
-        android:gravity="center"
         android:layout_marginTop="24dp"
-        android:textSize="20sp"/>
+        android:gravity="center_horizontal"
+        android:text="One Time Password"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/editTextCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/otptxt"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="232dp"
         android:ems="10"
         android:hint="Enter Phone OTP"
+        android:inputType="textMultiLine"
         android:maxLength="6"
-        android:textSize="20sp"
-        android:inputType="textMultiLine"/>
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/buttonVerify"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="82dp"
+        android:layout_below="@+id/editTextCode"
         android:background="@drawable/next_button_paint"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/colorPrimary"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp"
         android:text="Verify Account"
         android:textColor="@color/white"
-        android:paddingVertical="20dp"
-        android:paddingHorizontal="20dp"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+         />
 
     <ProgressBar
         android:id="@+id/verifyProgressBar"
@@ -50,6 +48,6 @@
         android:layout_below="@+id/editTextCode"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="214dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>
