@@ -12,7 +12,7 @@
         android:text="We will auto verifying your OTP"
         android:gravity="center"
         android:paddingVertical="24dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimary"
         android:textSize="16dp"/>
 
     <EditText
@@ -36,7 +36,7 @@
         android:text="Verify OTP"
         android:id="@+id/buttonVerify"
         android:background="@drawable/red_button"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:layout_marginVertical="8dp"

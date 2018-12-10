@@ -12,7 +12,7 @@
         android:text="Email Verification"
         android:gravity="center"
         android:paddingVertical="24dp"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorPrimary"
         android:textAllCaps="true"
         android:textSize="16dp"/>
 
@@ -35,7 +35,7 @@
         android:text="Send Verification Email"
         android:id="@+id/VerifyEmail"
         android:background="@drawable/red_button"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:layout_marginVertical="8dp"
