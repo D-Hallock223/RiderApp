@@ -25,7 +25,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="Got to Start"
+        android:text="Go to Start"
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:gravity="center_vertical"

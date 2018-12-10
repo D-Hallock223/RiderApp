@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".Activity.CreateRideOtherDetails"
+    android:background="@android:color/darker_gray"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.CreateRideOtherDetails">
+    android:background="@android:color/white"
+    android:layout_margin="8dp">
 
     <include layout="@layout/check_spinner"
         android:layout_width="wrap_content"
@@ -284,3 +293,4 @@
     </ScrollView>
 
 </RelativeLayout>
+</LinearLayout>

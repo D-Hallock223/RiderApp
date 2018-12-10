@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -89,6 +90,9 @@ public class CreateRideOtherDetails extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
+        getSupportActionBar().hide(); //hide the title bar
         setContentView(R.layout.activity_create_ride_other_details);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

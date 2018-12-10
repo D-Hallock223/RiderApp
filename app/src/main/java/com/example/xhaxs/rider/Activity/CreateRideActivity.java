@@ -93,10 +93,10 @@ public class CreateRideActivity extends AppCompatActivity {
 
         fromPlaceAutoCompleteFragment
                 .setFilter(new AutocompleteFilter.Builder().setTypeFilter(Place.TYPE_COUNTRY).setCountry("IN").build());
-
+        fromPlaceAutoCompleteFragment.setHint("From");
         toPlaceAutoCompleteFragment
                 .setFilter(new AutocompleteFilter.Builder().setTypeFilter(Place.TYPE_COUNTRY).setCountry("IN").build());
-
+        toPlaceAutoCompleteFragment.setHint("To");
         fromPlaceAutoCompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
