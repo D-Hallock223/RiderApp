@@ -79,6 +79,7 @@ public class ProfileDetailsActivity extends AppCompatActivity {
     private StorageReference mStorageRef, mImageRef;
     private FirebaseStorage mStorage;
     private UploadTask uploadTask;
+    private ProgressDialog progressDialog;
 
     private Uri selectImageUri;
     private String userNameFinal;

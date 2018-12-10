@@ -15,7 +15,7 @@
         android:paddingVertical="24dp"
         android:textAllCaps="true"
         android:textSize="16dp"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimary"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,8 +58,7 @@
             android:layout_height="wrap_content"
             android:text="Next"
             android:id="@+id/b_apn_send_otp"
-            android:background="@drawable/red_button"
-            android:backgroundTint="@color/colorPrimary"
+            android:background="@color/colorPrimary"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginVertical="8dp"

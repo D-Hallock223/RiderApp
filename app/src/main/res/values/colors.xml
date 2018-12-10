@@ -6,9 +6,12 @@
     <color name="greenDark">#002308</color>
     <color name="greenLight">#387759</color>
 
-    <color name="colorPrimary">@color/green</color>
-    <color name="colorPrimaryDark">@color/greenDark</color>
-    <color name="colorPrimaryLight">@color/greenLight</color>
+    <color name="blueLight">#4f83cc</color>
+    <color name="blueDark">#001064</color>
+
+    <color name="colorPrimary">@color/com_facebook_blue</color>
+    <color name="colorPrimaryDark">@color/blueDark</color>
+    <color name="colorPrimaryLight">@color/blueLight</color>
     <color name="colorAccent">#F44336</color>
 
     <color name="colorLimeGreen">#d9e231</color>
