@@ -32,7 +32,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:src="@drawable/baseline_account_circle_24" />
+                android:src="@drawable/imgg" />
 
             <EditText
                 android:id="@+id/et_sumit_profile_name"
@@ -48,13 +48,19 @@
                 android:id="@+id/tv_submit_select_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select Gender..."
+                android:text="Select Gender"
                 android:textSize="20sp"
                 android:paddingHorizontal="8dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="8dp"
                 android:paddingVertical="8dp"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:background="#000000"/>
             <Button
                 android:id="@+id/b_submit_profile_od"
                 android:layout_width="match_parent"
@@ -62,7 +68,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="16dp"
                 android:background="@drawable/red_button"
-                android:backgroundTint="@color/colorAccent"
+                android:backgroundTint="@color/colorPrimary"
                 android:paddingVertical="16dp"
                 android:text="Submit"
                 android:textColor="@color/white"

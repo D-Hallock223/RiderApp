@@ -24,7 +24,7 @@ import java.util.Map;
 public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData[]> {
 
     private SearchRideActivity mSearchRideActivity;
-    private CreateRideDetailData[] mCreateRideDetailData;
+    private ArrayList<CreateRideDetailData> mCreateRideDetailData;
     private Map<String, Object> mapFrom;
 
     private GeoDataClient mGeoDataClient;
@@ -71,7 +71,7 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
 
                         if(mapFrom == null){
                             Log.d(this.getClass().getName(), "______________NOTHING FOUND_____________");
-                            mSearchRideActivity.swapPosData(new CreateRideDetailData[0]);
+                            mSearchRideActivity.swapPosData(new ArrayList<CreateRideDetailData>());
                             mSearchRideActivity.mMessageTextView.setVisibility(View.VISIBLE);
                             mSearchRideActivity.mMessageTextView.setText(SearchRideActivity.NO_DATA_FOUND);
                             return;
@@ -100,19 +100,19 @@ public class RideDetailTask extends AsyncTask<String, Void, CreateRideDetailData
                             }
                         }
 
-                        mCreateRideDetailData = new CreateRideDetailData[createRideDetailDataArrayList.size()];
-                        for(int i = 0; i < createRideDetailDataArrayList.size(); ++i){
-                            mCreateRideDetailData[i] = createRideDetailDataArrayList.get(i);
-                        }
+                        mCreateRideDetailData = createRideDetailDataArrayList;
+//                        for(int i = 0; i < createRideDetailDataArrayList.size(); ++i){
+//                            mCreateRideDetailData[i] = createRideDetailDataArrayList.get(i);
+//                        }
 
-                        if(createRideDetailDataArrayList != null && createRideDetailDataArrayList.size() > 0) {
+                        if(mCreateRideDetailData != null && mCreateRideDetailData.size() > 0) {
                             mSearchRideActivity.mMessageTextView.setVisibility(View.GONE);
                             mSearchRideActivity.setRV(View.VISIBLE);
                             mSearchRideActivity.swapPosData(mCreateRideDetailData);
                         } else {
                             mSearchRideActivity.mMessageTextView.setVisibility(View.VISIBLE);
                             mSearchRideActivity.mMessageTextView.setText(SearchRideActivity.NO_DATA_FOUND);
-                            mSearchRideActivity.swapPosData(new CreateRideDetailData[0]);
+                            mSearchRideActivity.swapPosData(new ArrayList<CreateRideDetailData>(0));
                         }
 
                     }

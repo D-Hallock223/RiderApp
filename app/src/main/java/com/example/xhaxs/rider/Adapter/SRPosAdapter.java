@@ -13,12 +13,14 @@ import com.example.xhaxs.rider.Activity.SearchRideActivity;
 import com.example.xhaxs.rider.Datatype.CreateRideDetailData;
 import com.example.xhaxs.rider.R;
 
+import java.util.ArrayList;
+
 public class SRPosAdapter extends RecyclerView.Adapter<SRPosAdapter.SRPosVH> {
 
-    private CreateRideDetailData[] mCreateRideDetailData;
+    private ArrayList<CreateRideDetailData> mCreateRideDetailData;
     private SearchRideActivity mSearchRiderActivity;
 
-    public SRPosAdapter(SearchRideActivity searchRideActivity, CreateRideDetailData[] createRideDetailData) {
+    public SRPosAdapter(SearchRideActivity searchRideActivity, ArrayList<CreateRideDetailData> createRideDetailData) {
         super();
         this.mCreateRideDetailData = createRideDetailData;
         this.mSearchRiderActivity = searchRideActivity;
@@ -35,30 +37,30 @@ public class SRPosAdapter extends RecyclerView.Adapter<SRPosAdapter.SRPosVH> {
     @Override
     public void onBindViewHolder(@NonNull final SRPosVH srPosVH, int i) {
         final int index = i;
-        srPosVH.mTextViewOwner.setText(mCreateRideDetailData[i].getRideOwner().getUname());
-        srPosVH.mTextViewFrom.setText(mCreateRideDetailData[i].getFromLoc().toString());
-        srPosVH.mTextViewTo.setText(mCreateRideDetailData[i].getToLoc().toString());
+        srPosVH.mTextViewOwner.setText(mCreateRideDetailData.get(i).getRideOwner().getUname());
+        srPosVH.mTextViewFrom.setText(mCreateRideDetailData.get(i).getFromLoc().toString());
+        srPosVH.mTextViewTo.setText(mCreateRideDetailData.get(i).getToLoc().toString());
         srPosVH.mLinearLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSearchRiderActivity.showDetails(mCreateRideDetailData[index], index);
+                mSearchRiderActivity.showDetails(mCreateRideDetailData.get(index), index);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        if (mCreateRideDetailData == null || mCreateRideDetailData.length == 0) return 0;
-        return mCreateRideDetailData.length;
+        if (mCreateRideDetailData == null || mCreateRideDetailData.size() == 0) return 0;
+        return mCreateRideDetailData.size();
     }
 
-    public void swapList(CreateRideDetailData[] createRideDetailData) {
+    public void swapList(ArrayList<CreateRideDetailData> createRideDetailData) {
         mCreateRideDetailData = createRideDetailData;
         notifyDataSetChanged();
     }
 
     public void updateSpecificItem(CreateRideDetailData crdd, int index){
-        mCreateRideDetailData[index] = crdd;
+        mCreateRideDetailData.set(index, crdd);
         notifyItemChanged(index);
     }
 
